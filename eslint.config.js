@@ -51,6 +51,8 @@ export default tseslint.config(
       'scripts/**',
       'src/theme/fx.ts',
       'src/theme/memberColors.ts',
+      'src/components/brand/**',
+      '*.config.ts',
     ],
     rules: { 'no-restricted-syntax': 'off' },
   },

@@ -6,6 +6,8 @@ const token = (name: string) =>
 
 export default {
   content: ['./index.html', './src/**/*.{ts,tsx}'],
+  // Button variants are chosen at runtime (`sp-btn-${variant}`), so keep them all.
+  safelist: ['sp-btn-primary', 'sp-btn-secondary', 'sp-btn-ghost', 'sp-btn-danger'],
   theme: {
     extend: {
       colors: {

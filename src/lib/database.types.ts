@@ -347,7 +347,18 @@ export type Database = {
         Relationships: [];
       };
     };
-    Views: { [_ in never]: never };
+    Views: {
+      task_last_done: {
+        Row: {
+          task_id: string;
+          household_id: string;
+          completion_id: string;
+          done_on: string;
+          kind: string;
+        };
+        Relationships: [];
+      };
+    };
     Functions: {
       accept_member_invite: {
         Args: {

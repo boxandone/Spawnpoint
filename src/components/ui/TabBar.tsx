@@ -18,12 +18,8 @@ interface TabBarProps {
   inline?: boolean;
 }
 
-/** Bottom tab bar with a floating center action. One thumb, one tap. */
+/** Bottom tab bar with a floating action (Scan) above it. One thumb, one tap. */
 export function TabBar({ items, action, label, inline }: TabBarProps) {
-  const half = Math.ceil(items.length / 2);
-  const left = action ? items.slice(0, half) : items;
-  const right = action ? items.slice(half) : [];
-
   return (
     <nav
       aria-label={label}
@@ -34,22 +30,20 @@ export function TabBar({ items, action, label, inline }: TabBarProps) {
           : 'fixed inset-x-0 bottom-0 pb-[env(safe-area-inset-bottom)]',
       )}
     >
+      {action && (
+        <div className="pointer-events-none absolute inset-x-0 -top-[4.25rem] mx-auto flex max-w-lg justify-end px-4">
+          <NavLink
+            to={action.to}
+            aria-label={action.label}
+            title={action.label}
+            className="pointer-events-auto grid h-14 w-14 place-items-center rounded-full bg-primary text-primary-ink shadow-press ring-4 ring-bg transition-transform active:translate-y-[var(--press-depth)] active:shadow-none"
+          >
+            <Icon name={action.icon} size={26} strokeWidth={2.4} />
+          </NavLink>
+        </div>
+      )}
       <ul className="mx-auto flex h-16 max-w-lg items-stretch px-1">
-        {left.map((item) => (
-          <Tab key={item.to} item={item} />
-        ))}
-        {action && (
-          <li className="relative flex w-[72px] shrink-0 justify-center">
-            <NavLink
-              to={action.to}
-              aria-label={action.label}
-              className="absolute -top-5 grid h-14 w-14 place-items-center rounded-full bg-primary text-primary-ink shadow-press ring-4 ring-bg transition-transform active:translate-y-[var(--press-depth)] active:shadow-none"
-            >
-              <Icon name={action.icon} size={26} strokeWidth={2.4} />
-            </NavLink>
-          </li>
-        )}
-        {right.map((item) => (
+        {items.map((item) => (
           <Tab key={item.to} item={item} />
         ))}
       </ul>

@@ -10,3 +10,5 @@ export { ProgressMeter } from './ProgressMeter';
 export { Sheet } from './Sheet';
 export { TabBar, type TabItem } from './TabBar';
 export { ToastProvider, useToast, UNDO_MS } from './Toast';
+export { Logo } from './Logo';
+export { Splash } from './Splash';

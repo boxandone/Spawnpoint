@@ -36,7 +36,7 @@ insert into public.invites (id, kind, household_id, code_hash, expires_at) value
   ('70000000-0000-4000-8000-0000000000e1', 'household', null, private.hash_invite_code('HHHHHHHHHHHH'), now() + interval '14 days');
 
 -- A member of household A can't read or write anything in household B.
-select plan(24);
+select plan(25);
 
 set local role authenticated;
 set local request.jwt.claims = '{"sub": "10000000-0000-4000-8000-0000000000a1", "role": "authenticated"}';
@@ -49,6 +49,7 @@ select is((select count(*)::int from public.locations where household_id <> '200
 select is((select count(*)::int from public.tasks where household_id <> '20000000-0000-4000-8000-00000000000a'), 0, 'tasks: only A');
 select is((select count(*)::int from public.completions where household_id <> '20000000-0000-4000-8000-00000000000a'), 0, 'completions: only A');
 select is((select count(*)::int from public.tasks), 1, 'still sees its own task');
+select is((select count(*)::int from public.task_last_done where household_id <> '20000000-0000-4000-8000-00000000000a'), 0, 'task_last_done: only A');
 select ok(not public.is_member_of('20000000-0000-4000-8000-00000000000b'), 'is_member_of(B) is false');
 
 select is_empty($$update public.tasks set title = 'hacked' where id = '50000000-0000-4000-8000-00000000000b' returning id$$, 'cannot update B''s task');

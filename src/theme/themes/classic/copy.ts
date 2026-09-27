@@ -151,6 +151,16 @@ export const classicCopy = {
   'library.section.yard': 'Yard, driveway, side yard',
   'library.section.systems': 'Systems and safety',
 
+  // --- Member colors ---
+  'color.sky': 'Sky',
+  'color.mint': 'Mint',
+  'color.peach': 'Peach',
+  'color.lilac': 'Lilac',
+  'color.lemon': 'Lemon',
+  'color.rose': 'Rose',
+  'color.sage': 'Sage',
+  'color.sand': 'Sand',
+
   // --- Modules ---
   'module.chores': 'Chores',
   'module.lists': 'Lists',
@@ -302,6 +312,7 @@ export const classicCopy = {
   'settings.addArea': 'Add area',
   'settings.addSpot': 'Add spot',
   'settings.leave': 'Leave household',
+  'settings.locationName': 'Name',
 
   // --- Operator ---
   'operator.title': 'Operator',

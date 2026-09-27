@@ -36,7 +36,7 @@ insert into public.invites (id, kind, household_id, code_hash, expires_at) value
   ('70000000-0000-4000-8000-0000000000e1', 'household', null, private.hash_invite_code('HHHHHHHHHHHH'), now() + interval '14 days');
 
 -- Every table is locked down: RLS on, anon has nothing, no TRUNCATE for clients.
-select plan(9);
+select plan(10);
 
 select has_table('public', t, 'table public.' || t || ' exists')
 from unnest(array['households', 'household_members', 'household_settings', 'invites', 'locations', 'tasks', 'completions']) t
@@ -54,7 +54,7 @@ select is(
 
 select is(
   (select count(*)::int from pg_class c join pg_namespace n on n.oid = c.relnamespace
-   where n.nspname in ('public', 'private') and c.relkind in ('r', 'p')
+   where n.nspname in ('public', 'private') and c.relkind in ('r', 'p', 'v')
      and (has_table_privilege('anon', c.oid, 'select') or has_table_privilege('anon', c.oid, 'insert')
        or has_table_privilege('anon', c.oid, 'update') or has_table_privilege('anon', c.oid, 'delete'))),
   0, 'anon has no table privileges at all');
@@ -72,6 +72,12 @@ select is(
    where n.nspname = 'private' and c.relkind in ('r', 'p')
      and has_table_privilege('authenticated', c.oid, 'select')),
   0, 'operators, config, and invite attempts are unreadable by clients');
+
+select is(
+  (select count(*)::int from pg_class c join pg_namespace n on n.oid = c.relnamespace
+   where n.nspname = 'public' and c.relkind = 'v'
+     and not coalesce('security_invoker=true' = any(c.reloptions), false)),
+  0, 'every view runs with the caller''s permissions (RLS applies)');
 
 select is(
   (select count(*)::int from pg_proc p join pg_namespace n on n.oid = p.pronamespace
