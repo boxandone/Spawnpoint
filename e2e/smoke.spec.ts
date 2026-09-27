@@ -7,6 +7,15 @@ test('sign-in screen offers Google sign-in', async ({ page }) => {
   await expect(page.getByRole('button', { name: 'Continue with Google' })).toBeVisible();
 });
 
+test('privacy and terms are public and linked from sign-in', async ({ page }) => {
+  await page.goto('/signin');
+  await page.getByRole('link', { name: 'Privacy' }).click();
+  await expect(page.getByRole('heading', { name: 'Privacy', level: 1 })).toBeVisible();
+  await expect(page.getByText('never sold')).toBeVisible();
+  await page.goto('/terms');
+  await expect(page.getByRole('heading', { name: 'Terms', level: 1 })).toBeVisible();
+});
+
 test('signed-out visitors are sent to sign-in', async ({ page }) => {
   await page.goto('/');
   await expect(page).toHaveURL(/\/signin$/);

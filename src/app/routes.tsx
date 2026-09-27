@@ -11,6 +11,7 @@ import { TodayPage } from './chores/TodayPage';
 import { UpcomingPage } from './chores/UpcomingPage';
 import { AuthGate } from './gates/AuthGate';
 import { HouseholdGate } from './gates/HouseholdGate';
+import { PrivacyPage, TermsPage } from './legal/LegalPages';
 import { MePage } from './me/MePage';
 import { InviteProblemRoute, NotFound } from './NotFound';
 import { NeedInvitePage } from './onboarding/NeedInvitePage';
@@ -40,6 +41,8 @@ export const router = createBrowserRouter([
     ),
   },
   { path: '/signin', element: <SignInPage /> },
+  { path: '/privacy', element: <PrivacyPage /> },
+  { path: '/terms', element: <TermsPage /> },
   { path: '/auth/callback', element: <AuthCallbackPage /> },
   { path: '/start/:code', element: <StartInvitePage /> },
   { path: '/join/:code', element: <JoinInvitePage /> },

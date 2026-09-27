@@ -5,6 +5,7 @@ import { Button, Logo, Panel, TextField } from '@/components/ui';
 import { env } from '@/lib/env';
 import { supabase } from '@/lib/supabase';
 import { useCopy } from '@/theme';
+import { LegalLinks } from '../legal/LegalPages';
 import { useAuth } from './AuthProvider';
 import { pending } from './pending';
 
@@ -51,6 +52,7 @@ export function SignInPage() {
         {t('auth.google')}
       </Button>
       <p className="mt-3 text-center text-sm text-ink-muted">{t('auth.privacyNote')}</p>
+      <LegalLinks className="mt-2" />
       {error && (
         <p role="alert" className="mt-4 text-center font-bold">
           {error}
