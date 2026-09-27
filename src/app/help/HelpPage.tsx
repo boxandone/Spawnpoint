@@ -22,6 +22,8 @@ const FAQ = [
   'rotation',
   'shopping',
   'staples',
+  'receipts',
+  'labels',
   'theme',
   'invite',
   'install',

@@ -55,6 +55,19 @@ as $$
 $$;
 grant execute on function private.path_household(text) to authenticated, service_role;
 
+-- The household storage quota in bytes (HOUSEHOLD_STORAGE_MB, default 250).
+create or replace function private.storage_quota_bytes()
+returns bigint
+language sql
+stable
+security definer
+set search_path = ''
+as $$
+  select coalesce(private.config('household_storage_mb'), '250')::bigint * 1048576;
+$$;
+revoke all on function private.storage_quota_bytes() from public, anon;
+grant execute on function private.storage_quota_bytes() to authenticated, service_role;
+
 ------------------------------------------------------------------------------
 -- Tables
 ------------------------------------------------------------------------------
@@ -224,7 +237,7 @@ begin
   select coalesce(sum(d.size_bytes), 0) into used from public.documents d
   where d.household_id = new.household_id
     and (d.uploaded_at is not null or d.created_at > now() - interval '1 day');
-  quota := coalesce(private.config('household_storage_mb'), '250')::bigint * 1048576;
+  quota := private.storage_quota_bytes();
   if used + new.size_bytes > quota then
     raise exception 'storage quota reached' using errcode = '53100';
   end if;

@@ -40,6 +40,7 @@ select plan(17);
 
 set local role authenticated;
 set local request.jwt.claims = '{"sub": "10000000-0000-4000-8000-0000000000a1", "role": "authenticated"}';
+discard plans;
 select ok(not public.is_operator(), 'a household owner is not an operator');
 select throws_ok($$select public.operator_stats()$$, '42501', null, 'non-operator cannot read stats');
 select throws_ok($$select public.create_household_invite()$$, '42501', null, 'non-operator cannot create household invites');
@@ -50,6 +51,7 @@ select throws_ok($$select public.rename_invite('70000000-0000-4000-8000-00000000
 reset role;
 set local role authenticated;
 set local request.jwt.claims = '{"sub": "10000000-0000-4000-8000-0000000000e1", "role": "authenticated"}';
+discard plans;
 select ok(public.is_operator(), 'the operator is recognized by email');
 select cmp_ok((public.operator_stats() ->> 'households')::int, '>=', 2, 'operator sees a household count');
 select is(

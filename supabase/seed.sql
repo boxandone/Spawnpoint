@@ -215,3 +215,20 @@ cross join (values
   ('Pick a paint color for the hallway', null, true, 2)
 ) as v (name, due, discuss, pos)
 where l.household_id = 'b0000000-0000-4000-8000-000000000001' and l.kind = 'todo';
+
+------------------------------------------------------------------------------
+-- Stuff (fictional things; each gets a short code automatically)
+------------------------------------------------------------------------------
+
+insert into public.locations (id, household_id, parent_id, kind, name, sort) values
+  ('c1000000-0000-4000-8000-000000000052', 'b0000000-0000-4000-8000-000000000001', 'c1000000-0000-4000-8000-000000000013', 'spot', 'Shelf above the dryer', 1);
+
+insert into public.items (household_id, name, category, brand, model, purchased_on, price, store, warranty_until, location_id, spot, tags, barcode) values
+  ('b0000000-0000-4000-8000-000000000001', 'Cordless drill', 'tools', 'Demo Tools', 'CD-18', current_date - 400, 89.00, 'Hardware store', null,
+   'c1000000-0000-4000-8000-000000000052', 'Blue bin', '{tools,garage}', null),
+  ('b0000000-0000-4000-8000-000000000001', 'Stand mixer', 'appliance', 'Demo Kitchen', 'SM-5', current_date - 330, 249.00, 'Kitchen shop', current_date + 35,
+   'c1000000-0000-4000-8000-000000000011', 'Corner counter', '{baking}', '0123456789012'),
+  ('b0000000-0000-4000-8000-000000000001', 'Wi-Fi router', 'networking', 'Demo Net', 'AX-3', current_date - 200, 129.00, null, current_date + 165,
+   'c1000000-0000-4000-8000-000000000012', 'TV stand', '{network}', null),
+  ('b0000000-0000-4000-8000-000000000001', 'Spare house key', 'other', null, null, null, null, null, null,
+   'c1000000-0000-4000-8000-000000000051', 'Small tin', '{keys}', null);

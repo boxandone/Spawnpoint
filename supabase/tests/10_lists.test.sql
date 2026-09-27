@@ -55,6 +55,7 @@ insert into public.staples (household_id, name) values ('20000000-0000-4000-8000
 -- Member of A ----------------------------------------------------------------
 set local role authenticated;
 set local request.jwt.claims = '{"sub": "10000000-0000-4000-8000-0000000000a1", "role": "authenticated"}';
+discard plans;
 
 select is((select count(*)::int from public.lists), 3, 'A sees only its own lists');
 select is((select count(*)::int from public.list_items), 0, 'A can''t read B''s items');
@@ -127,6 +128,7 @@ select is((public.done_shopping((select v from ids where k = 'a_groc')) ->> 'cou
 reset role;
 set local role authenticated;
 set local request.jwt.claims = '{"sub": "10000000-0000-4000-8000-0000000000a2", "role": "authenticated"}';
+discard plans;
 select throws_ok(
   format('select public.undo_done_shopping(%L)', (select r ->> 'trip_id' from trip)),
   '42501', null, 'only the shopper can undo a trip');
@@ -135,6 +137,7 @@ select throws_ok(
 reset role;
 set local role authenticated;
 set local request.jwt.claims = '{"sub": "10000000-0000-4000-8000-0000000000b1", "role": "authenticated"}';
+discard plans;
 select throws_ok(
   format('select public.done_shopping(%L)', (select v from ids where k = 'a_groc')),
   '42501', null, 'B can''t finish A''s shopping');
@@ -149,6 +152,7 @@ select is((select name from public.list_items where id = '80000000-0000-4000-800
 reset role;
 set local role authenticated;
 set local request.jwt.claims = '{"sub": "10000000-0000-4000-8000-0000000000a1", "role": "authenticated"}';
+discard plans;
 select lives_ok(format('select public.undo_done_shopping(%L)', (select r ->> 'trip_id' from trip)), 'the shopper can undo');
 select is((select count(*)::int from public.list_items where id in ('82000000-0000-4000-8000-000000000001', '82000000-0000-4000-8000-000000000002') and checked), 2,
   'undo puts the items back in the cart');

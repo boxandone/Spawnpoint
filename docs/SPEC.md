@@ -375,7 +375,7 @@ Claude Code ticks items off here as they ship.
 - [x] Phase 1 — Chores
 - [x] Phase 2 — Rewards
 - [x] Phase 3 — Lists
-- [ ] Phase 4 — Stuff
+- [x] Phase 4 — Stuff
 - [ ] Phase 5 — Plans
 - [ ] Phase 6 — Theme packs
 - [ ] Phase 7 — Extras

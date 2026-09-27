@@ -18,8 +18,9 @@ The full product spec is in [`docs/SPEC.md`](docs/SPEC.md). The theme packs are 
 | 1 | Chores: Today, backdating, catch-up, skip, undo, Areas, Upcoming, History, zone rotation, starter library | Done |
 | 2 | Rewards: levels, badges, deeds, coins, reward shop, weekly meter, feed, seasons, share card | Done |
 | 3 | Lists: groceries with store mode and staples, to buy, to-do, custom lists | Done |
-| 4 | Stuff: items, documents, QR labels, scanner, warranty watch | Next |
-| 5–7 | Plans and calendar, the other 19 themes, notifications and extras | Planned |
+| 4 | Stuff: items, documents, QR labels, scanner, warranty watch | Done |
+| 5 | Plans: plans, the talk-it-over queue, calendar view, ICS feed | Next |
+| 6–7 | The other 19 themes, notifications and extras | Planned |
 
 ## Screenshots
 

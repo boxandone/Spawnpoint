@@ -41,6 +41,7 @@ select plan(14);
 
 set local role authenticated;
 set local request.jwt.claims = '{"sub": "10000000-0000-4000-8000-0000000000c1", "role": "authenticated"}';
+discard plans;
 
 select is((select count(*)::int from public.households), 0, 'no households visible');
 select is((select count(*)::int from public.household_members), 0, 'no members visible');
@@ -67,6 +68,7 @@ reset role;
 update private.app_config set value = 'open' where key = 'household_creation';
 set local role authenticated;
 set local request.jwt.claims = '{"sub": "10000000-0000-4000-8000-0000000000c1", "role": "authenticated"}';
+discard plans;
 
 select is(
   (public.create_household('Mine', 'UTC', 'Me') ->> 'ok')::boolean, true,

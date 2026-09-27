@@ -59,6 +59,9 @@ select is((select public from storage.buckets where id = 'docs'), false, 'the do
 -- Member A1 ------------------------------------------------------------------
 set local role authenticated;
 set local request.jwt.claims = '{"sub": "10000000-0000-4000-8000-0000000000a1", "role": "authenticated"}';
+-- Plans cached while the fixtures ran as superuser can skip permission checks;
+-- `discard plans` after each role switch makes every trigger run as a real client's would.
+discard plans;
 
 insert into public.items (id, household_id, name, location_id, tags) values
   ('90000000-0000-4000-8000-0000000000a1', '20000000-0000-4000-8000-00000000000a', 'Router', '40000000-0000-4000-8000-00000000000a', '{network,upstairs}');
@@ -137,12 +140,14 @@ select throws_ok(
 reset role;
 set local role authenticated;
 set local request.jwt.claims = '{"sub": "10000000-0000-4000-8000-0000000000a2", "role": "authenticated"}';
+discard plans;
 select throws_ok($$select public.finalize_document('92000000-0000-4000-8000-000000000001')$$, '42501', null,
   'only the uploader finishes an upload');
 
 reset role;
 set local role authenticated;
 set local request.jwt.claims = '{"sub": "10000000-0000-4000-8000-0000000000a1", "role": "authenticated"}';
+discard plans;
 select lives_ok($$select public.finalize_document('92000000-0000-4000-8000-000000000001')$$, 'the uploader finishes it');
 select is((select size_bytes from public.documents where id = '92000000-0000-4000-8000-000000000001'), 4300::bigint,
   'the size comes from the stored files, not the client');
@@ -172,6 +177,7 @@ select is((select count(*)::int from public.xp_events where document_id is not n
 reset role;
 set local role authenticated;
 set local request.jwt.claims = '{"sub": "10000000-0000-4000-8000-0000000000b1", "role": "authenticated"}';
+discard plans;
 select is((select count(*)::int from storage.objects), 1, 'B sees only its own file');
 delete from storage.objects where name like '20000000-0000-4000-8000-00000000000a/%';
 reset role;
@@ -182,6 +188,7 @@ select is((select count(*)::int from storage.objects where name like '20000000-0
 update private.app_config set value = '1' where key = 'household_storage_mb';
 set local role authenticated;
 set local request.jwt.claims = '{"sub": "10000000-0000-4000-8000-0000000000a1", "role": "authenticated"}';
+discard plans;
 select throws_ok(
   $$insert into public.documents (household_id, kind, storage_path, mime_type, size_bytes)
     values ('20000000-0000-4000-8000-00000000000a', 'other', '20000000-0000-4000-8000-00000000000a/household/92000000-0000-4000-8000-000000000005.pdf', 'application/pdf', 2097152)$$,

@@ -40,6 +40,7 @@ select plan(25);
 
 set local role authenticated;
 set local request.jwt.claims = '{"sub": "10000000-0000-4000-8000-0000000000a1", "role": "authenticated"}';
+discard plans;
 
 select is((select count(*)::int from public.households where id <> '20000000-0000-4000-8000-00000000000a'), 0, 'households: only A');
 select is((select count(*)::int from public.household_members where household_id <> '20000000-0000-4000-8000-00000000000a'), 0, 'members: only A');

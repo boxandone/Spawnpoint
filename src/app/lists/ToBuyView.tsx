@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button, EmptyState, Icon, SectionTitle, Tag, useToast } from '@/components/ui';
 import { mediumDate } from '@/lib/dates';
 import { useHousehold } from '@/modules/households/context';
@@ -17,7 +18,11 @@ import { TipQueue } from '../help/Tip';
 export function ToBuyView({ list, items }: { list: List; items: ListItem[] }) {
   const t = useCopy();
   const toast = useToast();
-  const { today } = useHousehold();
+  const { today, settings } = useHousehold();
+  const navigate = useNavigate();
+  const stuffOn = settings.modules.stuff;
+  const toStuff = (item: ListItem) =>
+    navigate(item.item_id ? `/stuff/${item.item_id}` : `/stuff/new?from=${item.id}`);
   const { locations } = useLocations();
   const { add, update, remove } = useItemMutations();
   const [editing, setEditing] = useState<ListItem | null>(null);
@@ -79,7 +84,21 @@ export function ToBuyView({ list, items }: { list: List; items: ListItem[] }) {
           </>
         }
         trailing={
-          firstLink ? (
+          isBought && stuffOn ? (
+            <Button
+              size="sm"
+              variant={item.item_id ? 'ghost' : 'secondary'}
+              icon="stuff"
+              onClick={() => toStuff(item)}
+              aria-label={
+                item.item_id
+                  ? t('toBuy.openInStuffNamed', { name: item.name })
+                  : t('toBuy.addToStuffNamed', { name: item.name })
+              }
+            >
+              {item.item_id ? t('toBuy.inStuff') : t('toBuy.addShort')}
+            </Button>
+          ) : firstLink ? (
             <a
               href={firstLink}
               target="_blank"
@@ -144,6 +163,7 @@ export function ToBuyView({ list, items }: { list: List; items: ListItem[] }) {
           onClose={() => setEditing(null)}
           onSave={(patch) => update(editing.id, patch)}
           onDelete={() => remove([editing])}
+          onAddToStuff={stuffOn ? () => toStuff(editing) : undefined}
         />
       )}
     </>

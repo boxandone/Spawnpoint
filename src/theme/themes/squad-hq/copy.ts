@@ -19,6 +19,8 @@ export const copy: Partial<CopyDict> = {
   'plans.name': 'Ops',
   'lists.toBuy': 'Requisitions',
   'lists.todo': 'Squad orders',
+  'stuff.add': 'Add gear',
+  'stuff.warrantyWatch': 'Warranties expiring',
   'grocery.doneShopping': 'Supply run done',
   'grocery.doneToast': 'Supply run logged: {count} items',
   'grocery.staples': 'Standard issue',
