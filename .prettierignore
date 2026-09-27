@@ -8,3 +8,5 @@ src/lib/database.types.ts
 supabase/.temp
 *.sql
 package-lock.json
+*.md
+.github

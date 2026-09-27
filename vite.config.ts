@@ -43,5 +43,16 @@ export default defineConfig({
   resolve: {
     alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          react: ['react', 'react-dom', 'react-router-dom'],
+          data: ['@supabase/supabase-js', '@tanstack/react-query'],
+          dates: ['date-fns', 'date-fns-tz', 'zod'],
+        },
+      },
+    },
+  },
   server: { port: 5173 },
 });

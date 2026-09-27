@@ -44,3 +44,11 @@ describe.each(THEME_IDS)('theme "%s"', (id) => {
     });
   }
 });
+
+describe('member colors', () => {
+  it('keep initials readable (4.5:1) on every member color', async () => {
+    const { MEMBER_COLORS, MEMBER_INK } = await import('./memberColors');
+    for (const c of MEMBER_COLORS)
+      expect(contrastRatio(MEMBER_INK, c.hex), c.id).toBeGreaterThanOrEqual(4.5);
+  });
+});

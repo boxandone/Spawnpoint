@@ -1,4 +1,6 @@
+import { lazy, Suspense, useMemo, type ComponentType } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
+import { Splash } from '@/components/ui';
 import { AppShell } from './AppShell';
 import { AuthCallbackPage, SignInPage } from './auth/SignInPage';
 import { AreaDetailPage, AreasPage } from './chores/AreasPage';
@@ -13,15 +15,30 @@ import { MePage } from './me/MePage';
 import { InviteProblemRoute, NotFound } from './NotFound';
 import { NeedInvitePage } from './onboarding/NeedInvitePage';
 import { JoinInvitePage, StartInvitePage } from './onboarding/InvitePages';
-import { SetupWizard } from './onboarding/SetupWizard';
-import { OperatorPage } from './operator/OperatorPage';
 import { ComingSoon } from './placeholders/ComingSoon';
-import { HouseholdSettingsPage } from './settings/HouseholdSettingsPage';
-import { PersonalSettingsPage } from './settings/PersonalSettingsPage';
-import { StyleguidePage } from './styleguide/StyleguidePage';
+
+/** Less-used screens load on demand to keep the first load small. */
+function Lazy({ load }: { load: () => Promise<{ default: ComponentType }> }) {
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const Component = useMemo(() => lazy(load), []);
+  return (
+    <Suspense fallback={<Splash />}>
+      <Component />
+    </Suspense>
+  );
+}
 
 export const router = createBrowserRouter([
-  { path: '/styleguide', element: <StyleguidePage /> },
+  {
+    path: '/styleguide',
+    element: (
+      <Lazy
+        load={() =>
+          import('./styleguide/StyleguidePage').then((m) => ({ default: m.StyleguidePage }))
+        }
+      />
+    ),
+  },
   { path: '/signin', element: <SignInPage /> },
   { path: '/auth/callback', element: <AuthCallbackPage /> },
   { path: '/start/:code', element: <StartInvitePage /> },
@@ -31,8 +48,26 @@ export const router = createBrowserRouter([
     errorElement: <InviteProblemRoute />,
     children: [
       { path: '/welcome', element: <NeedInvitePage /> },
-      { path: '/setup', element: <SetupWizard /> },
-      { path: '/operator', element: <OperatorPage /> },
+      {
+        path: '/setup',
+        element: (
+          <Lazy
+            load={() =>
+              import('./onboarding/SetupWizard').then((m) => ({ default: m.SetupWizard }))
+            }
+          />
+        ),
+      },
+      {
+        path: '/operator',
+        element: (
+          <Lazy
+            load={() =>
+              import('./operator/OperatorPage').then((m) => ({ default: m.OperatorPage }))
+            }
+          />
+        ),
+      },
       {
         element: <HouseholdGate />,
         children: [
@@ -48,8 +83,30 @@ export const router = createBrowserRouter([
               { path: '/tasks/new', element: <TaskEditorPage /> },
               { path: '/tasks/:id', element: <TaskEditorPage /> },
               { path: '/me', element: <MePage /> },
-              { path: '/settings/personal', element: <PersonalSettingsPage /> },
-              { path: '/settings/household', element: <HouseholdSettingsPage /> },
+              {
+                path: '/settings/personal',
+                element: (
+                  <Lazy
+                    load={() =>
+                      import('./settings/PersonalSettingsPage').then((m) => ({
+                        default: m.PersonalSettingsPage,
+                      }))
+                    }
+                  />
+                ),
+              },
+              {
+                path: '/settings/household',
+                element: (
+                  <Lazy
+                    load={() =>
+                      import('./settings/HouseholdSettingsPage').then((m) => ({
+                        default: m.HouseholdSettingsPage,
+                      }))
+                    }
+                  />
+                ),
+              },
               { path: '/lists', element: <ComingSoon title="lists.name" icon="lists" /> },
               { path: '/stuff', element: <ComingSoon title="stuff.name" icon="stuff" /> },
               { path: '/plans', element: <ComingSoon title="plans.name" icon="plans" /> },
