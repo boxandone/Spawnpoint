@@ -16,8 +16,9 @@ The full product spec is in [`docs/SPEC.md`](docs/SPEC.md). The theme packs are 
 |---|---|---|
 | 0 | Foundation: app shell, theme engine, Classic and Squad HQ packs, accounts, households, invites, operator page | Done |
 | 1 | Chores: Today, backdating, catch-up, skip, undo, Areas, Upcoming, History, zone rotation, starter library | Done |
-| 2 | Rewards: levels, badges, deeds, coins, reward shop, weekly meter, feed | Next |
-| 3–7 | Lists, Stuff, Plans and calendar, the other 19 themes, notifications and extras | Planned |
+| 2 | Rewards: levels, badges, deeds, coins, reward shop, weekly meter, feed, seasons, share card | Done |
+| 3 | Lists: groceries with store mode, to buy, to-do, custom lists | Next |
+| 4–7 | Stuff, Plans and calendar, the other 19 themes, notifications and extras | Planned |
 
 ## Screenshots
 

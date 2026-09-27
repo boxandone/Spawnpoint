@@ -36,7 +36,7 @@ insert into public.invites (id, kind, household_id, code_hash, expires_at) value
   ('70000000-0000-4000-8000-0000000000e1', 'household', null, private.hash_invite_code('HHHHHHHHHHHH'), now() + interval '14 days');
 
 -- Rewards are computed by the database (docs/SPEC.md 4.9, CLAUDE.md rule 4).
-select plan(44);
+select plan(51);
 
 -- Extra fixtures: tasks of each effort in A, one linked to a unit deed, one to a no-XP deed.
 insert into public.tasks (id, household_id, title, schedule, effort, deed_key, unit, location_id, created_at) values
@@ -130,12 +130,22 @@ select throws_ok($$update public.member_stats set coins_spent = 0, xp_total = 99
 select throws_ok($$update public.badge_progress set tier = 3$$, '42501', null, 'clients cannot award badges');
 select throws_ok($$insert into public.feed_events (household_id, member_id, kind) values ('20000000-0000-4000-8000-00000000000a', '30000000-0000-4000-8000-0000000000a1', 'badge')$$, '42501', null, 'clients cannot post to the feed directly');
 
+-- "Log a fix": XP for the doer, +2 for the logger, undo removes both.
+create temp table fix as select public.log_deed('toilet_flapper', current_date - 1, 1, '30000000-0000-4000-8000-0000000000a2') as id;
+select is((select member_id from public.deed_logs where id = (select id from fix)), '30000000-0000-4000-8000-0000000000a2'::uuid, 'a fix can be logged for a housemate');
+select is((select credited_xp from public.xp_events where deed_log_id = (select id from fix) and source_kind = 'helper'), 2.00, 'the logger gets 2 for logging it');
+select throws_ok($$select public.log_deed('toilet_flapper', current_date + 1)$$, '23514', null, 'a fix cannot be dated in the future');
+select throws_ok($$select public.log_deed('not_a_deed', current_date)$$, '22023', null, 'unknown deeds are rejected');
+select lives_ok($$select public.undo_deed_log((select id from fix))$$, 'the logger can undo a fix');
+
 -- Coins and the reward shop: spending checks the balance in the database.
 insert into public.rewards (name, cost) values ('Sleep in Saturday', 30), ('Big treat', 100000);
 select is((select count(*)::int from public.rewards), 2, 'members build their own shop');
 select is((public.redeem_reward((select id from public.rewards where name = 'Sleep in Saturday'), true) ->> 'balance')::int,
   (select floor(xp_total)::int - 30 from public.member_stats), 'redeeming spends coins');
 select throws_ok($$select public.redeem_reward((select id from public.rewards where name = 'Big treat'))$$, 'P0001', null, 'the balance can never go below zero');
+select lives_ok($$select public.undo_redemption((select id from public.redemptions limit 1))$$, 'a redemption can be undone right away');
+select is((select coins_spent from public.member_stats), 0, 'and the coins come back');
 
 -- Someone else's shop is private.
 reset role;

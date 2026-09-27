@@ -179,7 +179,9 @@ export async function leaveHousehold(): Promise<void> {
 
 export async function updateProfile(
   memberId: string,
-  patch: Partial<Pick<Member, 'display_name' | 'avatar' | 'color' | 'theme' | 'mode'>>,
+  patch: Partial<
+    Pick<Member, 'display_name' | 'avatar' | 'color' | 'theme' | 'mode' | 'share_badges'>
+  >,
 ): Promise<void> {
   const { error } = await supabase.from('household_members').update(patch).eq('id', memberId);
   if (error) fail(error);

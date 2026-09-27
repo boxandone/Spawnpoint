@@ -4,6 +4,7 @@ import { TabBar, type TabItem } from '@/components/ui';
 import { useHousehold } from '@/modules/households/context';
 import { useCopy } from '@/theme';
 import { useUnseenUpdate } from './updates/useUpdates';
+import { RewardsWatcher } from '@/modules/rewards/components/RewardsWatcher';
 
 /** Mobile shell: content column plus the bottom tab bar (Today · Lists · Stuff · Plans · Me). */
 export function AppShell() {
@@ -35,6 +36,7 @@ export function AppShell() {
       >
         {t('nav.main')}
       </a>
+      <RewardsWatcher />
       <main id="main" className="mx-auto min-h-[100dvh] max-w-lg px-4 pb-tabbar">
         <Outlet />
       </main>

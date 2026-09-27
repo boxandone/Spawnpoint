@@ -13,7 +13,8 @@ export interface TodayViewProps {
   hour: number;
   today: IsoDate;
   view: TodayData<ChoreTask>;
-  meter: { value: number; target: number };
+  /** The household weekly meter; omitted when the rewards module is off. */
+  meter?: { value: number; target: number };
   zoneNames: string[];
   catchUpCount: number;
   locationName: (id: string | null) => string | null;
@@ -26,6 +27,7 @@ export interface TodayViewProps {
   onDone?: (task: ChoreTask, el: HTMLElement) => void;
   onMore?: (task: ChoreTask) => void;
   onAdd?: () => void;
+  onLogFix?: () => void;
   onCatchUp?: () => void;
   onUpcoming?: () => void;
   /** Guide-mode tips, shown under the weekly meter. */
@@ -71,6 +73,14 @@ export function TodayView(props: TodayViewProps) {
           <h1 className="truncate text-3xl leading-tight">{t('app.today')}</h1>
           {props.name && <p className="sr-only">{props.name}</p>}
         </div>
+        {props.onLogFix && (
+          <IconButton
+            icon="wrench"
+            label={t('deed.logFix')}
+            onClick={props.onLogFix}
+            className="bg-surface shadow-card"
+          />
+        )}
         {props.onAdd && (
           <IconButton
             icon="plus"
@@ -81,7 +91,7 @@ export function TodayView(props: TodayViewProps) {
         )}
       </header>
 
-      <WeeklyMeter value={props.meter.value} target={props.meter.target} />
+      {props.meter && <WeeklyMeter value={props.meter.value} target={props.meter.target} />}
       {props.tips && <div className="mt-3 flex flex-col gap-2">{props.tips}</div>}
 
       {(props.zoneNames.length > 0 || props.onFilter) && (

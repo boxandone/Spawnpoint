@@ -16,6 +16,9 @@ import { FeedbackPage } from './help/FeedbackPage';
 import { HelpPage } from './help/HelpPage';
 import { MePage } from './me/MePage';
 import { UpdatesPage } from './updates/UpdatesPage';
+import { BadgesPage } from './rewards/BadgesPage';
+import { FeedPage } from './rewards/FeedPage';
+import { ShopPage } from './rewards/ShopPage';
 import { InviteProblemRoute, NotFound } from './NotFound';
 import { NeedInvitePage } from './onboarding/NeedInvitePage';
 import { JoinInvitePage, StartInvitePage } from './onboarding/InvitePages';
@@ -92,6 +95,9 @@ export const router = createBrowserRouter([
               { path: '/tasks/:id', element: <TaskEditorPage /> },
               { path: '/me', element: <MePage /> },
               { path: '/updates', element: <UpdatesPage /> },
+              { path: '/me/badges', element: <BadgesPage /> },
+              { path: '/me/shop', element: <ShopPage /> },
+              { path: '/feed', element: <FeedPage /> },
               {
                 path: '/settings/personal',
                 element: (

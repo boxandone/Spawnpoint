@@ -664,7 +664,7 @@ declare
   me public.household_members;
   doer public.household_members;
   today date;
-  id uuid;
+  new_id uuid;
 begin
   select * into me from public.household_members where user_id = auth.uid() and status = 'active';
   if me.id is null then
@@ -684,8 +684,8 @@ begin
   end if;
   insert into public.deed_logs (household_id, member_id, logged_by, deed_key, day, quantity)
   values (me.household_id, doer.id, me.id, p_deed_key, p_day, greatest(coalesce(p_quantity, 1), 0.01))
-  returning deed_logs.id into id;
-  return id;
+  returning deed_logs.id into new_id;
+  return new_id;
 end;
 $$;
 

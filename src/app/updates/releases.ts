@@ -17,6 +17,45 @@ export interface Release {
 
 export const RELEASES: readonly Release[] = [
   {
+    version: '0.4.0',
+    date: '2026-09-27',
+    title: 'Levels, badges, and a reward shop',
+    changes: [
+      {
+        kind: 'new',
+        text: 'Finishing tasks now earns XP and levels. Your level, XP, and coins are private to you.',
+      },
+      {
+        kind: 'new',
+        text: 'Badges for good deeds and milestones, with bronze, silver, and gold tiers. Once earned, a badge is yours to keep.',
+      },
+      {
+        kind: 'new',
+        text: 'Log a fix: record a good deed that wasn’t on the list, from the wrench button on Today.',
+      },
+      {
+        kind: 'new',
+        text: 'Coins and a household reward shop. Owners add rewards, and anyone can spend their own coins. Undo within 10 minutes.',
+      },
+      {
+        kind: 'new',
+        text: 'Seasons: ten goals each quarter. Finish five for that season’s badge.',
+      },
+      {
+        kind: 'new',
+        text: 'A household feed of shared celebrations. Choose whether your new badges show there in Settings.',
+      },
+      {
+        kind: 'new',
+        text: 'Make a share card with your level and top badges.',
+      },
+      {
+        kind: 'improved',
+        text: 'The weekly meter on Today now counts the household’s earned XP.',
+      },
+    ],
+  },
+  {
     version: '0.3.0',
     date: '2026-09-27',
     title: 'Help, tips, and a quick dark mode switch',

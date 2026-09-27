@@ -4,7 +4,16 @@ import { supabase } from '@/lib/supabase';
 import { qk } from '@/lib/queryKeys';
 
 type Table =
-  'tasks' | 'completions' | 'locations' | 'household_members' | 'household_settings' | 'households';
+  | 'tasks'
+  | 'completions'
+  | 'locations'
+  | 'household_members'
+  | 'household_settings'
+  | 'households'
+  | 'deed_logs'
+  | 'feed_events'
+  | 'member_stats'
+  | 'badge_progress';
 
 /** Subscribe to a household's changes. Realtime applies RLS, so only our rows arrive. */
 export function subscribeHousehold(
@@ -18,6 +27,11 @@ export function subscribeHousehold(
     'locations',
     'household_members',
     'household_settings',
+    'deed_logs',
+    'feed_events',
+    // Own rows only (RLS): someone logging for you updates your level live.
+    'member_stats',
+    'badge_progress',
   ];
   for (const table of scoped) {
     channel.on(
@@ -56,6 +70,12 @@ export function useHouseholdRealtime(householdId: string, userId: string) {
         }
         if (table === 'locations')
           void qc.invalidateQueries({ queryKey: qk.locations(householdId) });
+        if (['completions', 'deed_logs', 'member_stats', 'badge_progress'].includes(table)) {
+          void qc.invalidateQueries({ queryKey: ['rewards'] });
+          void qc.invalidateQueries({ queryKey: qk.weekXp(householdId) });
+          void qc.invalidateQueries({ queryKey: qk.deedLogs(householdId) });
+        }
+        if (table === 'feed_events') void qc.invalidateQueries({ queryKey: qk.feed(householdId) });
         if (
           table === 'household_members' ||
           table === 'household_settings' ||

@@ -1,9 +1,10 @@
 import { Link } from 'react-router-dom';
-import { Avatar, Icon, IconButton, Panel, SectionTitle, Tag, type IconName } from '@/components/ui';
+import { Avatar, Icon, IconButton, SectionTitle, Tag, type IconName } from '@/components/ui';
 import { signOut } from '@/modules/households/api';
 import { useHousehold } from '@/modules/households/context';
 import { useIsOperator, useUpdateProfile } from '@/modules/households/hooks';
-import { BadgeFrame, useCopy, usePack, type CopyKey, type ModePreference } from '@/theme';
+import { useCopy, type CopyKey, type ModePreference } from '@/theme';
+import { RewardsPanel } from '../rewards/RewardsPanel';
 import { APP_VERSION } from '../updates/releases';
 import { useUnseenUpdate } from '../updates/useUpdates';
 
@@ -32,11 +33,10 @@ function MenuLink({
   );
 }
 
-/** Me: your profile and the More menu. Levels, badges, and coins arrive in Phase 2. */
+/** Me: your profile, your rewards, and the More menu. */
 export function MePage() {
   const t = useCopy();
-  const pack = usePack();
-  const { member, household } = useHousehold();
+  const { member, household, settings } = useHousehold();
   const operator = useIsOperator();
   const { unseen } = useUnseenUpdate();
   const updateProfile = useUpdateProfile();
@@ -52,6 +52,7 @@ export function MePage() {
   };
 
   const more: Array<{ to: string; icon: IconName; label: CopyKey }> = [
+    { to: '/feed', icon: 'feed', label: 'feed.title' },
     { to: '/areas', icon: 'zone', label: 'areas.title' },
     { to: '/upcoming', icon: 'calendar', label: 'upcoming.title' },
     { to: '/history', icon: 'history', label: 'history.title' },
@@ -75,17 +76,7 @@ export function MePage() {
         </p>
       </header>
 
-      <Panel className="mt-4 flex items-center gap-4">
-        <BadgeFrame tier="locked" size={52} label={t('badge.plural')}>
-          <Icon name="sparkle" size={22} />
-        </BadgeFrame>
-        <div className="min-w-0 flex-1">
-          <p className="font-display">
-            {t('badge.plural')} · {t('coins.name')} · {pack.levelTitles[0]}
-          </p>
-          <p className="text-sm text-ink-muted">{t('me.rewardsSoon')}</p>
-        </div>
-      </Panel>
+      {settings.modules.rewards && <RewardsPanel />}
 
       <SectionTitle>{t('me.more')}</SectionTitle>
       <ul className="sp-panel divide-y divide-line">

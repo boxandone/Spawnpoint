@@ -1,15 +1,17 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { EmptyState, Splash } from '@/components/ui';
 import { hourIn } from '@/lib/dates';
 import { TaskActionSheet } from '@/modules/chores/components/TaskActionSheet';
 import { TodayView } from '@/modules/chores/components/TodayView';
 import { useChores, useLogCompletions } from '@/modules/chores/hooks';
-import { buildToday, catchUp, rotationFor, weeklyPoints } from '@/modules/chores/logic';
+import { buildToday, catchUp, rotationFor } from '@/modules/chores/logic';
+import { LogFixSheet } from '@/modules/rewards/components/LogFixSheet';
+import { useLogDeed, useWeekXp } from '@/modules/rewards/hooks';
 import type { ChoreTask } from '@/modules/chores/types';
 import { useHousehold } from '@/modules/households/context';
 import { locationLabel } from '@/modules/locations/logic';
-import { useCopy } from '@/theme';
+import { useCelebrate, useCopy } from '@/theme';
 import { TipQueue } from '../help/Tip';
 
 export function TodayPage() {
@@ -37,10 +39,30 @@ export function TodayPage() {
     () => catchUp(tasks, completions, today, ctx).length,
     [tasks, completions, today, ctx],
   );
-  const meterValue = useMemo(() => {
-    const effort = new Map(tasks.map((x) => [x.id, x.effort]));
-    return weeklyPoints(completions, (id) => effort.get(id), today);
-  }, [tasks, completions, today]);
+  const rewardsOn = settings.modules.rewards;
+  const weekXp = useWeekXp();
+  const meterValue = weekXp.data ?? 0;
+  const logDeed = useLogDeed();
+  const [fixOpen, setFixOpen] = useState(false);
+  const celebrate = useCelebrate();
+  const lastMeter = useRef<number | null>(null);
+  // Celebrate when the household crosses the weekly target (not on first load).
+  useEffect(() => {
+    if (weekXp.data == null) return;
+    const before = lastMeter.current;
+    if (
+      rewardsOn &&
+      before != null &&
+      before < settings.weekly_target &&
+      weekXp.data >= settings.weekly_target
+    ) {
+      celebrate('meterFull', {
+        from: document.getElementById('weekly-meter'),
+        text: t('meter.full'),
+      });
+    }
+    lastMeter.current = weekXp.data;
+  }, [weekXp.data, settings.weekly_target, rewardsOn, celebrate, t]);
   const zoneNames = useMemo(
     () =>
       rotationFor(settings.zone_rotation, today)
@@ -63,7 +85,7 @@ export function TodayPage() {
         hour={hourIn(household.timezone)}
         today={today}
         view={view}
-        meter={{ value: meterValue, target: settings.weekly_target }}
+        meter={rewardsOn ? { value: meterValue, target: settings.weekly_target } : undefined}
         zoneNames={zoneNames}
         catchUpCount={catchUpCount}
         locationName={(id) => locationLabel(id, locations)}
@@ -78,6 +100,7 @@ export function TodayPage() {
         }
         onMore={setMenuTask}
         onAdd={() => navigate('/tasks/new')}
+        onLogFix={rewardsOn ? () => setFixOpen(true) : undefined}
         onCatchUp={() => navigate('/catch-up')}
         onUpcoming={() => navigate('/upcoming')}
         tips={
@@ -95,6 +118,14 @@ export function TodayPage() {
         task={menuTask}
         onClose={() => setMenuTask(null)}
         onLog={(input) => log([input])}
+        members={members}
+        me={member}
+        today={today}
+      />
+      <LogFixSheet
+        open={fixOpen}
+        onClose={() => setFixOpen(false)}
+        onLog={(input) => void logDeed(input)}
         members={members}
         me={member}
         today={today}

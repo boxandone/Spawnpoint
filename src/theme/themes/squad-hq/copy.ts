@@ -49,4 +49,6 @@ export const copy: Partial<CopyDict> = {
   'history.title': 'Mission log',
   'me.title': 'Hero',
   'setup.themeTitle': 'Choose your lobby',
+  'feed.title': 'Squad comms',
+  'fix.logged': 'Field repair logged!',
 };
