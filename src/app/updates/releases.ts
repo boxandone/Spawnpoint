@@ -17,6 +17,18 @@ export interface Release {
 
 export const RELEASES: readonly Release[] = [
   {
+    version: '0.2.1',
+    date: '2026-09-27',
+    title: 'Clearer invites for operators',
+    changes: [
+      { kind: 'improved', text: 'Operators can rename household invite labels.' },
+      {
+        kind: 'improved',
+        text: 'A used household invite shows which household it became, as a short id.',
+      },
+    ],
+  },
+  {
     version: '0.2.0',
     date: '2026-09-27',
     title: 'Privacy, terms, and what’s new',

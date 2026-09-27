@@ -40,6 +40,12 @@ const PATHS = {
     </>
   ),
   plus: <path d="M12 5v14M5 12h14" />,
+  edit: (
+    <>
+      <path d="M4 20h4L19 9l-4-4L4 16Z" />
+      <path d="M13.5 6.5l4 4" />
+    </>
+  ),
   check: <path d="M5 12.5 10 17.5 19 7" />,
   more: (
     <>

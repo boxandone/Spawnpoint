@@ -376,6 +376,9 @@ export const classicCopy = {
   'operator.status.used': 'Used',
   'operator.status.expired': 'Expired',
   'operator.status.revoked': 'Revoked',
+  'operator.rename': 'Rename {label}',
+  'operator.createdHousehold': 'Became household #{ref}',
+  'operator.labelPlaceholder': 'Who it’s for',
   'operator.notOperator': 'This page is for whoever runs this site.',
 
   // --- Styleguide ---

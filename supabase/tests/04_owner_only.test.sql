@@ -36,7 +36,7 @@ insert into public.invites (id, kind, household_id, code_hash, expires_at) value
   ('70000000-0000-4000-8000-0000000000e1', 'household', null, private.hash_invite_code('HHHHHHHHHHHH'), now() + interval '14 days');
 
 -- Only owners manage members, invites, and household settings.
-select plan(20);
+select plan(22);
 
 -- As a plain member of A
 set local role authenticated;
@@ -44,6 +44,7 @@ set local request.jwt.claims = '{"sub": "10000000-0000-4000-8000-0000000000a2", 
 
 select throws_ok($$select public.create_member_invite('20000000-0000-4000-8000-00000000000a')$$, '42501', null, 'member cannot create invites');
 select throws_ok($$select public.revoke_invite('70000000-0000-4000-8000-00000000000a')$$, '42501', null, 'member cannot revoke invites');
+select throws_ok($$select public.rename_invite('70000000-0000-4000-8000-00000000000a', 'x')$$, '42501', null, 'member cannot rename invites');
 select throws_ok($$select public.remove_member('30000000-0000-4000-8000-0000000000a1')$$, '42501', null, 'member cannot remove members');
 select throws_ok($$select public.set_member_role('30000000-0000-4000-8000-0000000000a2', 'owner')$$, '42501', null, 'member cannot promote themselves');
 select is((select count(*)::int from public.invites), 0, 'member cannot see invites');
@@ -61,6 +62,7 @@ set local request.jwt.claims = '{"sub": "10000000-0000-4000-8000-0000000000a1", 
 
 select is(length(public.create_member_invite('20000000-0000-4000-8000-00000000000a') ->> 'code'), 12, 'owner creates a 12-character invite code');
 select is((select count(*)::int from public.invites), 2, 'owner sees the household''s invites');
+select lives_ok($$select public.rename_invite('70000000-0000-4000-8000-00000000000a', 'For Sam')$$, 'owner can rename their invite');
 select lives_ok($$select public.revoke_invite('70000000-0000-4000-8000-00000000000a')$$, 'owner can revoke an invite');
 select isnt_empty($$update public.household_settings set weekly_target = 500 returning id$$, 'owner can change settings');
 select throws_ok($$select public.create_member_invite('20000000-0000-4000-8000-00000000000b')$$, '42501', null, 'owner of A cannot create invites for B');

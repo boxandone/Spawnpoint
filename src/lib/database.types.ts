@@ -151,6 +151,7 @@ export type Database = {
           use_count: number;
           revoked_at: string | null;
           last_used_at: string | null;
+          created_household_id: string | null;
           created_at: string;
           updated_at: string;
           created_by: string | null;
@@ -166,6 +167,7 @@ export type Database = {
           use_count?: number;
           revoked_at?: string | null;
           last_used_at?: string | null;
+          created_household_id?: string | null;
           created_at?: string;
           updated_at?: string;
           created_by?: string | null;
@@ -181,6 +183,7 @@ export type Database = {
           use_count?: number;
           revoked_at?: string | null;
           last_used_at?: string | null;
+          created_household_id?: string | null;
           created_at?: string;
           updated_at?: string;
           created_by?: string | null;
@@ -398,6 +401,7 @@ export type Database = {
       public_config: { Args: Record<PropertyKey, never>; Returns: Json };
       remove_member: { Args: { p_member_id: string }; Returns: undefined };
       revoke_invite: { Args: { p_invite_id: string }; Returns: undefined };
+      rename_invite: { Args: { p_invite_id: string; p_label: string }; Returns: undefined };
       set_member_role: { Args: { p_member_id: string; p_role: string }; Returns: undefined };
       sync_config: { Args: { p_operator_emails: string[]; p_config: Json }; Returns: Json };
     };

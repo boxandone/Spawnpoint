@@ -16,7 +16,7 @@ import {
 } from './types';
 
 const INVITE_COLUMNS =
-  'id, kind, household_id, label, expires_at, max_uses, use_count, revoked_at, last_used_at, created_at';
+  'id, kind, household_id, label, expires_at, max_uses, use_count, revoked_at, last_used_at, created_at, created_household_id';
 
 function fail(error: { message: string } | null): never {
   throw new Error(error?.message ?? 'Request failed');
@@ -154,6 +154,11 @@ export async function listInvites(kind: 'member' | 'household'): Promise<MemberI
 
 export async function revokeInvite(id: string): Promise<void> {
   const { error } = await supabase.rpc('revoke_invite', { p_invite_id: id });
+  if (error) fail(error);
+}
+
+export async function renameInvite(id: string, label: string): Promise<void> {
+  const { error } = await supabase.rpc('rename_invite', { p_invite_id: id, p_label: label });
   if (error) fail(error);
 }
 
