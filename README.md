@@ -102,7 +102,7 @@ Spawnpoint signs people in with Google and asks only for their name and email (t
    - **User support email**: your email.
    - **Audience**: **External**.
    - **Contact information**: your email.
-3. Under **Branding → Authorized domains**, add `YOUR-PROJECT-REF.supabase.co` and your site's domain (for example `netlify.app` if you use a Netlify address, or your own domain).
+3. Under **Branding → Authorized domains**, add `YOUR-PROJECT-REF.supabase.co` and your site's domain, for example `spawnpoint-xyz.netlify.app` or your own domain. Enter the full subdomain with no `https://`. Google rejects shared hosting domains like `supabase.co` or `netlify.app` on their own ("must be a top private domain").
    - Skip the app logo. Uploading one triggers a Google review you don't need.
 4. Under **Data access**, add only the three basic scopes: `openid`, `.../auth/userinfo.email`, and `.../auth/userinfo.profile`. Don't add anything else.
 5. Under **Audience**, click **Publish app** so the **Publishing status** reads **In production**. Because you only use basic scopes, Google doesn't require verification. (While it's in "Testing", only test users you list can sign in.)
