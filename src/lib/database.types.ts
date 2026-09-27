@@ -6,6 +6,54 @@ export type Json = string | number | boolean | null | { [key: string]: Json | un
 export type Database = {
   public: {
     Tables: {
+      badge_catalog: {
+        Row: { key: string; family: string; thresholds: number[]; unit: string | null; xp: number; cooldown_days: number | null; category: string | null };
+        Insert: { [key: string]: never };
+        Update: { [key: string]: never };
+        Relationships: [];
+      };
+      deed_logs: {
+        Row: { id: string; household_id: string; member_id: string; logged_by: string; deed_key: string; day: string; quantity: number; completion_id: string | null; created_at: string; updated_at: string; created_by: string | null };
+        Insert: { [key: string]: never };
+        Update: { [key: string]: never };
+        Relationships: [];
+      };
+      xp_events: {
+        Row: { id: string; household_id: string; member_id: string; source_kind: string; completion_id: string | null; deed_log_id: string | null; day: string; raw_xp: number; credited_xp: number; capped: boolean; created_at: string };
+        Insert: { [key: string]: never };
+        Update: { [key: string]: never };
+        Relationships: [];
+      };
+      member_stats: {
+        Row: { member_id: string; household_id: string; xp_total: number; level: number; coins_spent: number; updated_at: string };
+        Insert: { [key: string]: never };
+        Update: { [key: string]: never };
+        Relationships: [];
+      };
+      badge_progress: {
+        Row: { id: string; household_id: string; member_id: string; badge_key: string; count: number; tier: number; tier_earned_at: string | null; updated_at: string };
+        Insert: { [key: string]: never };
+        Update: { [key: string]: never };
+        Relationships: [];
+      };
+      rewards: {
+        Row: { id: string; household_id: string; member_id: string; name: string; icon: string; cost: number; archived_at: string | null; created_at: string; updated_at: string; created_by: string | null };
+        Insert: { name: string; icon?: string; cost: number };
+        Update: { name?: string; icon?: string; cost?: number; archived_at?: string | null };
+        Relationships: [];
+      };
+      redemptions: {
+        Row: { id: string; household_id: string; member_id: string; reward_id: string | null; name: string; icon: string; cost: number; posted: boolean; created_at: string };
+        Insert: { [key: string]: never };
+        Update: { [key: string]: never };
+        Relationships: [];
+      };
+      feed_events: {
+        Row: { id: string; household_id: string; member_id: string; kind: string; payload: Json; created_at: string };
+        Insert: { [key: string]: never };
+        Update: { [key: string]: never };
+        Relationships: [];
+      };
       feedback: {
         Row: {
           id: string;
@@ -73,6 +121,7 @@ export type Database = {
           color: string;
           theme: string | null;
           mode: string;
+          share_badges: boolean;
           joined_at: string;
           created_at: string;
           updated_at: string;
@@ -89,6 +138,7 @@ export type Database = {
           color?: string;
           theme?: string | null;
           mode?: string;
+          share_badges?: boolean;
           joined_at?: string;
           created_at?: string;
           updated_at?: string;
@@ -105,6 +155,7 @@ export type Database = {
           color?: string;
           theme?: string | null;
           mode?: string;
+          share_badges?: boolean;
           joined_at?: string;
           created_at?: string;
           updated_at?: string;
@@ -420,6 +471,17 @@ export type Database = {
       };
       current_member_id: { Args: Record<PropertyKey, never>; Returns: string };
       household_today: { Args: { hid: string }; Returns: string };
+      household_week_xp: { Args: { p_household_id: string; p_week_start: string }; Returns: number };
+      level_for_xp: { Args: { xp: number }; Returns: number };
+      log_deed: {
+        Args: { p_deed_key: string; p_day: string; p_quantity?: number; p_done_by?: string };
+        Returns: string;
+      };
+      my_rewards: { Args: Record<PropertyKey, never>; Returns: Json };
+      redeem_reward: { Args: { p_reward_id: string; p_post?: boolean }; Returns: Json };
+      undo_deed_log: { Args: { p_id: string }; Returns: undefined };
+      undo_redemption: { Args: { p_id: string }; Returns: undefined };
+      xp_for_level: { Args: { lvl: number }; Returns: number };
       is_member_of: { Args: { hid: string }; Returns: boolean };
       is_operator: { Args: Record<PropertyKey, never>; Returns: boolean };
       is_owner_of: { Args: { hid: string }; Returns: boolean };
