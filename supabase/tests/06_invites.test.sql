@@ -36,7 +36,7 @@ insert into public.invites (id, kind, household_id, code_hash, expires_at) value
   ('70000000-0000-4000-8000-0000000000e1', 'household', null, private.hash_invite_code('HHHHHHHHHHHH'), now() + interval '14 days');
 
 -- Invite codes are hashed, single-use, expire, can be revoked, and are rate-limited.
-select plan(16);
+select plan(17);
 
 -- Owner creates a code: only its hash is stored.
 set local role authenticated;
@@ -81,6 +81,13 @@ set local request.jwt.claims = '{"sub": "10000000-0000-4000-8000-0000000000c2", 
 select is((public.create_household('Fresh Start', 'America/Chicago', 'Founder', 'HHHHHHHHHHHH') ->> 'ok')::boolean, true, 'an operator invite creates a household');
 select is((select role from public.household_members where user_id = auth.uid()), 'owner', 'the creator is the owner');
 select is((select timezone from public.households), 'America/Chicago', 'with the chosen timezone');
+reset role;
+select is(
+  (select created_household_id from public.invites where id = '70000000-0000-4000-8000-0000000000e1'),
+  (select household_id from public.household_members where user_id = '10000000-0000-4000-8000-0000000000c2' and status = 'active'),
+  'the invite remembers which household it created');
+set local role authenticated;
+set local request.jwt.claims = '{"sub": "10000000-0000-4000-8000-0000000000c2", "role": "authenticated"}';
 
 reset role;
 delete from public.household_members where user_id = '10000000-0000-4000-8000-0000000000c2';

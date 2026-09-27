@@ -30,6 +30,7 @@ import type { Modules } from '@/modules/households/types';
 import { useLocationMutations, useLocations } from '@/modules/locations/hooks';
 import { buildTree, listAreas } from '@/modules/locations/logic';
 import { THEME_PACKS, useCopy, type CopyKey } from '@/theme';
+import { Tip } from '../help/Tip';
 
 const MODULE_KEYS: Array<keyof Modules> = [
   'chores',
@@ -275,6 +276,7 @@ function ZoneRotation() {
   const areas = useMemo(() => listAreas(locations), [locations]);
   return (
     <Panel className="flex flex-col gap-3">
+      <Tip id="rotation" text="tip.rotation" />
       <p className="text-sm text-ink-muted">{t('settings.zoneRotationBody')}</p>
       {WEEK.map((wd) => (
         <Select

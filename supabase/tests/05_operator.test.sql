@@ -36,7 +36,7 @@ insert into public.invites (id, kind, household_id, code_hash, expires_at) value
   ('70000000-0000-4000-8000-0000000000e1', 'household', null, private.hash_invite_code('HHHHHHHHHHHH'), now() + interval '14 days');
 
 -- Operator functions work only for operators, and return counts and sizes only.
-select plan(14);
+select plan(17);
 
 set local role authenticated;
 set local request.jwt.claims = '{"sub": "10000000-0000-4000-8000-0000000000a1", "role": "authenticated"}';
@@ -45,6 +45,7 @@ select throws_ok($$select public.operator_stats()$$, '42501', null, 'non-operato
 select throws_ok($$select public.create_household_invite()$$, '42501', null, 'non-operator cannot create household invites');
 select throws_ok($$select public.revoke_invite('70000000-0000-4000-8000-0000000000e1')$$, '42501', null, 'non-operator cannot revoke household invites');
 select throws_ok($$select public.sync_config(array['me@test.example'], '{}')$$, '42501', null, 'clients cannot make themselves operators');
+select throws_ok($$select public.rename_invite('70000000-0000-4000-8000-0000000000e1', 'Mine now')$$, '42501', null, 'non-operator cannot rename household invites');
 
 reset role;
 set local role authenticated;
@@ -64,6 +65,8 @@ select is(
     + (select count(*)::int from public.household_members),
   0, 'operator cannot read any household content');
 select throws_ok($$select public.revoke_invite('70000000-0000-4000-8000-00000000000a')$$, '42501', null, 'operator cannot revoke a household''s member invite');
+select lives_ok($$select public.rename_invite('70000000-0000-4000-8000-0000000000e1', '  For the lake house  ')$$, 'operator can rename a household invite');
+select is((select label from public.invites where id = '70000000-0000-4000-8000-0000000000e1'), 'For the lake house', 'the new label is trimmed and saved');
 select lives_ok($$select public.revoke_invite('70000000-0000-4000-8000-0000000000e1')$$, 'operator can revoke a household invite');
 
 select * from finish();

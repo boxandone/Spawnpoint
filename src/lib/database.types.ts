@@ -6,6 +6,222 @@ export type Json = string | number | boolean | null | { [key: string]: Json | un
 export type Database = {
   public: {
     Tables: {
+      badge_catalog: {
+        Row: { key: string; family: string; thresholds: number[]; unit: string | null; xp: number; cooldown_days: number | null; category: string | null };
+        Insert: { [key: string]: never };
+        Update: { [key: string]: never };
+        Relationships: [];
+      };
+      deed_logs: {
+        Row: { id: string; household_id: string; member_id: string; logged_by: string; deed_key: string; day: string; quantity: number; completion_id: string | null; created_at: string; updated_at: string; created_by: string | null };
+        Insert: { [key: string]: never };
+        Update: { [key: string]: never };
+        Relationships: [];
+      };
+      xp_events: {
+        Row: { id: string; household_id: string; member_id: string; source_kind: string; completion_id: string | null; deed_log_id: string | null; shopping_trip_id: string | null; day: string; raw_xp: number; credited_xp: number; capped: boolean; created_at: string };
+        Insert: { [key: string]: never };
+        Update: { [key: string]: never };
+        Relationships: [];
+      };
+      member_stats: {
+        Row: { member_id: string; household_id: string; xp_total: number; level: number; coins_spent: number; updated_at: string };
+        Insert: { [key: string]: never };
+        Update: { [key: string]: never };
+        Relationships: [];
+      };
+      badge_progress: {
+        Row: { id: string; household_id: string; member_id: string; badge_key: string; count: number; tier: number; tier_earned_at: string | null; updated_at: string };
+        Insert: { [key: string]: never };
+        Update: { [key: string]: never };
+        Relationships: [];
+      };
+      rewards: {
+        Row: { id: string; household_id: string; member_id: string; name: string; icon: string; cost: number; archived_at: string | null; created_at: string; updated_at: string; created_by: string | null };
+        Insert: { name: string; icon?: string; cost: number };
+        Update: { name?: string; icon?: string; cost?: number; archived_at?: string | null };
+        Relationships: [];
+      };
+      redemptions: {
+        Row: { id: string; household_id: string; member_id: string; reward_id: string | null; name: string; icon: string; cost: number; posted: boolean; created_at: string };
+        Insert: { [key: string]: never };
+        Update: { [key: string]: never };
+        Relationships: [];
+      };
+      feed_events: {
+        Row: { id: string; household_id: string; member_id: string; kind: string; payload: Json; created_at: string };
+        Insert: { [key: string]: never };
+        Update: { [key: string]: never };
+        Relationships: [];
+      };
+      lists: {
+        Row: {
+          id: string;
+          household_id: string;
+          kind: string;
+          name: string | null;
+          icon: string | null;
+          position: number;
+          archived_at: string | null;
+          created_at: string;
+          updated_at: string;
+          created_by: string | null;
+        };
+        Insert: {
+          id?: string;
+          household_id: string;
+          kind: string;
+          name?: string | null;
+          icon?: string | null;
+          position?: number;
+          archived_at?: string | null;
+        };
+        Update: {
+          name?: string | null;
+          icon?: string | null;
+          position?: number;
+          archived_at?: string | null;
+        };
+        Relationships: [];
+      };
+      list_items: {
+        Row: {
+          id: string;
+          household_id: string;
+          list_id: string;
+          name: string;
+          quantity: string | null;
+          category: string | null;
+          status: string | null;
+          priority: string;
+          target_price: number | null;
+          links: string[];
+          location_id: string | null;
+          bought_on: string | null;
+          due_on: string | null;
+          assignee_id: string | null;
+          discuss: boolean;
+          notes: string | null;
+          checked: boolean;
+          checked_at: string | null;
+          checked_by: string | null;
+          position: number;
+          created_at: string;
+          updated_at: string;
+          created_by: string | null;
+        };
+        Insert: {
+          id?: string;
+          household_id: string;
+          list_id: string;
+          name: string;
+          quantity?: string | null;
+          category?: string | null;
+          status?: string | null;
+          priority?: string;
+          target_price?: number | null;
+          links?: string[];
+          location_id?: string | null;
+          bought_on?: string | null;
+          due_on?: string | null;
+          assignee_id?: string | null;
+          discuss?: boolean;
+          notes?: string | null;
+          checked?: boolean;
+          checked_at?: string | null;
+          position?: number;
+        };
+        Update: {
+          name?: string;
+          quantity?: string | null;
+          category?: string | null;
+          status?: string | null;
+          priority?: string;
+          target_price?: number | null;
+          links?: string[];
+          location_id?: string | null;
+          bought_on?: string | null;
+          due_on?: string | null;
+          assignee_id?: string | null;
+          discuss?: boolean;
+          notes?: string | null;
+          checked?: boolean;
+          position?: number;
+        };
+        Relationships: [];
+      };
+      staples: {
+        Row: {
+          id: string;
+          household_id: string;
+          name: string;
+          quantity: string | null;
+          category: string | null;
+          position: number;
+          created_at: string;
+          updated_at: string;
+          created_by: string | null;
+        };
+        Insert: {
+          id?: string;
+          household_id: string;
+          name: string;
+          quantity?: string | null;
+          category?: string | null;
+          position?: number;
+        };
+        Update: {
+          name?: string;
+          quantity?: string | null;
+          category?: string | null;
+          position?: number;
+        };
+        Relationships: [];
+      };
+      shopping_trips: {
+        Row: {
+          id: string;
+          household_id: string;
+          member_id: string;
+          day: string;
+          items: Json;
+          item_count: number;
+          created_at: string;
+          updated_at: string;
+          created_by: string | null;
+        };
+        Insert: { [key: string]: never };
+        Update: { [key: string]: never };
+        Relationships: [];
+      };
+      feedback: {
+        Row: {
+          id: string;
+          user_id: string;
+          household_id: string | null;
+          kind: string;
+          message: string;
+          page: string | null;
+          app_version: string | null;
+          user_agent: string | null;
+          status: string;
+          operator_note: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          kind: string;
+          message: string;
+          page?: string | null;
+          app_version?: string | null;
+          user_agent?: string | null;
+        };
+        Update: {
+          status?: string;
+          operator_note?: string | null;
+        };
+        Relationships: [];
+      };
       households: {
         Row: {
           id: string;
@@ -45,6 +261,7 @@ export type Database = {
           color: string;
           theme: string | null;
           mode: string;
+          share_badges: boolean;
           joined_at: string;
           created_at: string;
           updated_at: string;
@@ -61,6 +278,7 @@ export type Database = {
           color?: string;
           theme?: string | null;
           mode?: string;
+          share_badges?: boolean;
           joined_at?: string;
           created_at?: string;
           updated_at?: string;
@@ -77,6 +295,7 @@ export type Database = {
           color?: string;
           theme?: string | null;
           mode?: string;
+          share_badges?: boolean;
           joined_at?: string;
           created_at?: string;
           updated_at?: string;
@@ -151,6 +370,7 @@ export type Database = {
           use_count: number;
           revoked_at: string | null;
           last_used_at: string | null;
+          created_household_id: string | null;
           created_at: string;
           updated_at: string;
           created_by: string | null;
@@ -166,6 +386,7 @@ export type Database = {
           use_count?: number;
           revoked_at?: string | null;
           last_used_at?: string | null;
+          created_household_id?: string | null;
           created_at?: string;
           updated_at?: string;
           created_by?: string | null;
@@ -181,6 +402,7 @@ export type Database = {
           use_count?: number;
           revoked_at?: string | null;
           last_used_at?: string | null;
+          created_household_id?: string | null;
           created_at?: string;
           updated_at?: string;
           created_by?: string | null;
@@ -389,6 +611,29 @@ export type Database = {
       };
       current_member_id: { Args: Record<PropertyKey, never>; Returns: string };
       household_today: { Args: { hid: string }; Returns: string };
+      household_week_xp: { Args: { p_household_id: string; p_week_start: string }; Returns: number };
+      level_for_xp: { Args: { xp: number }; Returns: number };
+      log_deed: {
+        Args: { p_deed_key: string; p_day: string; p_quantity?: number; p_done_by?: string };
+        Returns: string;
+      };
+      my_rewards: { Args: Record<PropertyKey, never>; Returns: Json };
+      redeem_reward: { Args: { p_reward_id: string; p_post?: boolean }; Returns: Json };
+      undo_deed_log: { Args: { p_id: string }; Returns: undefined };
+      undo_redemption: { Args: { p_id: string }; Returns: undefined };
+      done_shopping: { Args: { p_list_id: string }; Returns: Json };
+      undo_done_shopping: { Args: { p_trip_id: string }; Returns: undefined };
+      grocery_suggestions: {
+        Args: { p_household_id: string };
+        Returns: Array<{
+          name: string;
+          quantity: string | null;
+          category: string | null;
+          times: number;
+          last_day: string;
+        }>;
+      };
+      xp_for_level: { Args: { lvl: number }; Returns: number };
       is_member_of: { Args: { hid: string }; Returns: boolean };
       is_operator: { Args: Record<PropertyKey, never>; Returns: boolean };
       is_owner_of: { Args: { hid: string }; Returns: boolean };
@@ -398,6 +643,11 @@ export type Database = {
       public_config: { Args: Record<PropertyKey, never>; Returns: Json };
       remove_member: { Args: { p_member_id: string }; Returns: undefined };
       revoke_invite: { Args: { p_invite_id: string }; Returns: undefined };
+      rename_invite: { Args: { p_invite_id: string; p_label: string }; Returns: undefined };
+      set_feedback_status: {
+        Args: { p_id: string; p_status: string; p_note?: string };
+        Returns: undefined;
+      };
       set_member_role: { Args: { p_member_id: string; p_role: string }; Returns: undefined };
       sync_config: { Args: { p_operator_emails: string[]; p_config: Json }; Returns: Json };
     };

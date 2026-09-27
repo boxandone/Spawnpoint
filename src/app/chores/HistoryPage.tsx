@@ -1,31 +1,59 @@
+import { useQuery } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 import { Avatar, EmptyState, PageHeader, Select, Splash, Tag, TextField } from '@/components/ui';
 import { addDays, diffDays, mediumDate, weekdayName, weekdayOf } from '@/lib/dates';
 import { useChores, useHistory } from '@/modules/chores/hooks';
 import { useHousehold } from '@/modules/households/context';
 import { listAreas, locationLabel } from '@/modules/locations/logic';
+import { qk } from '@/lib/queryKeys';
+import type { ChoreCompletion } from '@/modules/chores/types';
+import { listFixLogs } from '@/modules/rewards/api';
+import { getDeed } from '@/modules/rewards/deeds';
 import { useCopy } from '@/theme';
 
 /** Who did what, as plain entries. Never counts per person. */
 export function HistoryPage() {
   const t = useCopy();
-  const { today, memberById } = useHousehold();
+  const { today, memberById, household } = useHousehold();
   const { tasks, locations, ancestry } = useChores();
   const [from, setFrom] = useState(addDays(today, -13));
   const [to, setTo] = useState(today);
   const [area, setArea] = useState('');
   const { data, isLoading } = useHistory(from, to);
+  // "Log a fix" entries (task-linked deeds already appear as their task).
+  const fixes = useQuery({
+    queryKey: [...qk.deedLogs(household.id), from, to],
+    queryFn: () => listFixLogs(household.id, from, to),
+  });
   const areas = useMemo(() => listAreas(locations), [locations]);
   const taskById = useMemo(() => new Map(tasks.map((x) => [x.id, x])), [tasks]);
 
   const entries = useMemo(
     () =>
-      (data ?? []).filter((c) => {
-        if (!area) return true;
-        const task = taskById.get(c.task_id);
-        return !!task?.location_id && ancestry(task.location_id).includes(area);
-      }),
-    [data, area, taskById, ancestry],
+      [
+        ...(data ?? []),
+        ...(fixes.data ?? []).map((f): ChoreCompletion & { deedName?: string } => ({
+          id: f.id,
+          task_id: '',
+          done_on: f.day,
+          kind: 'done',
+          done_by: f.member_id,
+          logged_by: f.logged_by,
+          quantity: getDeed(f.deed_key) && 'unit' in getDeed(f.deed_key)! ? f.quantity : null,
+          note: null,
+          logged_at: null,
+          source: null,
+          deedName: getDeed(f.deed_key)?.name ?? f.deed_key,
+        })),
+      ]
+        .sort((a, b) => b.done_on.localeCompare(a.done_on))
+        .filter((c: ChoreCompletion & { deedName?: string }) => {
+          if (c.deedName) return !area;
+          if (!area) return true;
+          const task = taskById.get(c.task_id);
+          return !!task?.location_id && ancestry(task.location_id).includes(area);
+        }),
+    [data, fixes.data, area, taskById, ancestry],
   );
 
   const byDay = new Map<string, typeof entries>();
@@ -101,7 +129,7 @@ export function HistoryPage() {
                         <p className="font-bold leading-snug">
                           {t('history.entry', {
                             name: who?.display_name ?? '?',
-                            task: task?.title ?? '…',
+                            task: (c as { deedName?: string }).deedName ?? task?.title ?? '…',
                           })}
                         </p>
                         <p className="flex flex-wrap items-center gap-2 text-[13px] text-ink-muted">

@@ -16,7 +16,7 @@ import {
 } from './types';
 
 const INVITE_COLUMNS =
-  'id, kind, household_id, label, expires_at, max_uses, use_count, revoked_at, last_used_at, created_at';
+  'id, kind, household_id, label, expires_at, max_uses, use_count, revoked_at, last_used_at, created_at, created_household_id';
 
 function fail(error: { message: string } | null): never {
   throw new Error(error?.message ?? 'Request failed');
@@ -157,6 +157,11 @@ export async function revokeInvite(id: string): Promise<void> {
   if (error) fail(error);
 }
 
+export async function renameInvite(id: string, label: string): Promise<void> {
+  const { error } = await supabase.rpc('rename_invite', { p_invite_id: id, p_label: label });
+  if (error) fail(error);
+}
+
 export async function removeMember(memberId: string): Promise<void> {
   const { error } = await supabase.rpc('remove_member', { p_member_id: memberId });
   if (error) fail(error);
@@ -174,7 +179,9 @@ export async function leaveHousehold(): Promise<void> {
 
 export async function updateProfile(
   memberId: string,
-  patch: Partial<Pick<Member, 'display_name' | 'avatar' | 'color' | 'theme' | 'mode'>>,
+  patch: Partial<
+    Pick<Member, 'display_name' | 'avatar' | 'color' | 'theme' | 'mode' | 'share_badges'>
+  >,
 ): Promise<void> {
   const { error } = await supabase.from('household_members').update(patch).eq('id', memberId);
   if (error) fail(error);

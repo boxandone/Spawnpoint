@@ -15,6 +15,7 @@ import { describeSchedule } from '@/modules/chores/schedule';
 import { freshness, isStale, nextDue, tasksUnder } from '@/modules/chores/logic';
 import { listAreas, locationLabel } from '@/modules/locations/logic';
 import { EffortIcon, useCopy } from '@/theme';
+import { Tip } from '../help/Tip';
 
 function FreshnessBar({ ratio, label }: { ratio: number; label: string }) {
   const t = useCopy();
@@ -46,6 +47,7 @@ export function AreasPage() {
   return (
     <div>
       <PageHeader title={t('areas.title')} back />
+      <Tip id="areas" text="tip.areas" className="mb-2" />
       {areas.length === 0 && <EmptyState icon="home" title={t('areas.noTasks')} />}
       {[...groups.entries()].map(([zone, list]) => (
         <section key={zone || 'none'}>

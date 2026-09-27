@@ -176,3 +176,42 @@ insert into public.tasks (id, household_id, title, location_id, effort, priority
 insert into public.completions (household_id, task_id, done_on, logged_at, done_by, logged_by, kind, source) values
   ('b0000000-0000-4000-8000-000000000002', 'e2000000-0000-4000-8000-000000000001', current_date - 1, now() - interval '1 day', 'd0000000-0000-4000-8000-000000000003', 'd0000000-0000-4000-8000-000000000003', 'done', 'tap'),
   ('b0000000-0000-4000-8000-000000000002', 'e2000000-0000-4000-8000-000000000003', current_date - 4, now() - interval '3 days', 'd0000000-0000-4000-8000-000000000003', 'd0000000-0000-4000-8000-000000000003', 'done', 'menu');
+
+------------------------------------------------------------------------------
+-- Lists (the built-in lists are created with each household)
+------------------------------------------------------------------------------
+
+insert into public.list_items (household_id, list_id, name, quantity, category, position, checked)
+select 'b0000000-0000-4000-8000-000000000001', l.id, v.name, v.qty, v.cat, v.pos, v.checked
+from public.lists l
+cross join (values
+  ('Milk', '2', 'dairy', 1, false),
+  ('Bananas', null, 'produce', 2, false),
+  ('Sourdough bread', null, 'bakery', 3, false),
+  ('Coffee', null, 'drinks', 4, true),
+  ('Dog food', '1 bag', 'pets', 5, false)
+) as v (name, qty, cat, pos, checked)
+where l.household_id = 'b0000000-0000-4000-8000-000000000001' and l.kind = 'groceries';
+
+insert into public.staples (household_id, name, quantity, category) values
+  ('b0000000-0000-4000-8000-000000000001', 'Eggs', '12', 'dairy'),
+  ('b0000000-0000-4000-8000-000000000001', 'Milk', '2', 'dairy'),
+  ('b0000000-0000-4000-8000-000000000001', 'Paper towels', null, 'household');
+
+insert into public.list_items (household_id, list_id, name, status, priority, target_price, position)
+select 'b0000000-0000-4000-8000-000000000001', l.id, v.name, v.status, v.priority, v.price, v.pos
+from public.lists l
+cross join (values
+  ('Porch light', 'to_buy', 'high', 45.00, 1),
+  ('Standing desk', 'idea', 'normal', 300.00, 2)
+) as v (name, status, priority, price, pos)
+where l.household_id = 'b0000000-0000-4000-8000-000000000001' and l.kind = 'to_buy';
+
+insert into public.list_items (household_id, list_id, name, due_on, discuss, position)
+select 'b0000000-0000-4000-8000-000000000001', l.id, v.name, v.due, v.discuss, v.pos
+from public.lists l
+cross join (values
+  ('Book the chimney sweep', current_date + 5, false, 1),
+  ('Pick a paint color for the hallway', null, true, 2)
+) as v (name, due, discuss, pos)
+where l.household_id = 'b0000000-0000-4000-8000-000000000001' and l.kind = 'todo';

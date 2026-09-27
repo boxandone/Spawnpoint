@@ -44,6 +44,8 @@ export interface MemberInvite {
   revoked_at: string | null;
   last_used_at: string | null;
   created_at: string;
+  /** Household invites only: the household it created. */
+  created_household_id: string | null;
 }
 
 export type InviteResult =

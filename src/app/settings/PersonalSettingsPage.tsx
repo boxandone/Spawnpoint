@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Button, PageHeader, Panel, SectionTitle, Segmented } from '@/components/ui';
+import { Button, PageHeader, Panel, SectionTitle, Segmented, Switch } from '@/components/ui';
 import { hourIn } from '@/lib/dates';
 import { useChores } from '@/modules/chores/hooks';
 import { buildToday, weeklyPoints } from '@/modules/chores/logic';
@@ -82,6 +82,17 @@ export function PersonalSettingsPage() {
           {t('common.save')}
         </Button>
       </Panel>
+
+      {settings.modules.rewards && (
+        <Panel className="mt-4">
+          <Switch
+            label={t('settings.shareBadges')}
+            description={t('settings.shareBadgesBody')}
+            checked={member.share_badges}
+            onChange={(v) => update.mutate({ share_badges: v })}
+          />
+        </Panel>
+      )}
 
       <SectionTitle>{t('settings.mode')}</SectionTitle>
       <Segmented<ModePreference>

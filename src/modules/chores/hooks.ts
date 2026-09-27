@@ -6,7 +6,7 @@ import { useHousehold } from '@/modules/households/context';
 import { useLocations } from '@/modules/locations/hooks';
 import { useCelebrate, useCopy } from '@/theme';
 import * as api from './api';
-import { weeklyPoints, type ScheduleContext } from './logic';
+import type { ScheduleContext } from './logic';
 import type { ChoreCompletion, LogInput, TaskInput } from './types';
 
 export function useTasks() {
@@ -77,7 +77,7 @@ interface LogOptions {
  * 6-second undo toast. Undo waits for the insert, then deletes the rows.
  */
 export function useLogCompletions() {
-  const { household, member, today, settings } = useHousehold();
+  const { household, member, today } = useHousehold();
   const qc = useQueryClient();
   const toast = useToast();
   const celebrate = useCelebrate();
@@ -89,12 +89,6 @@ export function useLogCompletions() {
       if (inputs.length === 0) return;
       const rows = inputs.map((i) => api.toCompletionRow(household.id, member.id, i));
       const ids = rows.map((r) => r.id);
-      const tasks =
-        qc.getQueryData<Awaited<ReturnType<typeof api.listTasks>>>(qk.tasks(household.id)) ?? [];
-      const effortOf = (id: string) => tasks.find((x) => x.id === id)?.effort;
-      const before = qc.getQueryData<ChoreCompletion[]>(key) ?? [];
-      const pointsBefore = weeklyPoints(before, effortOf, today);
-
       qc.setQueryData<ChoreCompletion[]>(key, (old) => [...rows.map(toClient), ...(old ?? [])]);
       const removeFromCache = () =>
         qc.setQueryData<ChoreCompletion[]>(key, (old) =>
@@ -104,20 +98,18 @@ export function useLogCompletions() {
       const allSkipped = inputs.every((i) => i.kind === 'skipped');
       if (opts.celebrate !== false && !allSkipped) celebrate('taskComplete', { from: opts.from });
 
-      const pointsAfter = weeklyPoints([...rows.map(toClient), ...before], effortOf, today);
-      if (pointsBefore < settings.weekly_target && pointsAfter >= settings.weekly_target) {
-        setTimeout(
-          () =>
-            celebrate('meterFull', {
-              from: document.getElementById('weekly-meter'),
-              text: t('meter.full'),
-            }),
-          450,
-        );
-      }
+      // XP, badges, the feed, and the weekly meter are computed by the database.
+      const refreshRewards = () => {
+        void qc.invalidateQueries({ queryKey: ['rewards'] });
+        void qc.invalidateQueries({ queryKey: qk.weekXp(household.id) });
+        void qc.invalidateQueries({ queryKey: qk.feed(household.id) });
+      };
 
       const insert = api.insertCompletions(rows).then(
-        () => qc.invalidateQueries({ queryKey: qk.completions(household.id) }),
+        () => {
+          refreshRewards();
+          return qc.invalidateQueries({ queryKey: qk.completions(household.id) });
+        },
         (err: unknown) => {
           removeFromCache();
           toast.show({ message: t('common.error'), tone: 'danger' });
@@ -140,11 +132,12 @@ export function useLogCompletions() {
           } finally {
             void qc.invalidateQueries({ queryKey: qk.completions(household.id) });
             void qc.invalidateQueries({ queryKey: qk.history(household.id) });
+            refreshRewards();
           }
         },
       });
     },
-    [household.id, member.id, today, settings.weekly_target, qc, key, toast, celebrate, t],
+    [household.id, member.id, qc, key, toast, celebrate, t],
   );
 }
 

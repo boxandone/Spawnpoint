@@ -13,6 +13,7 @@ const base: MemberInvite = {
   revoked_at: null,
   last_used_at: null,
   created_at: '2026-09-27T00:00:00Z',
+  created_household_id: null,
 };
 
 describe('invite helpers', () => {
