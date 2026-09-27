@@ -61,6 +61,7 @@ export function MePage() {
         {more.map((m) => (
           <MenuLink key={m.to} to={m.to} icon={m.icon} label={t(m.label)} />
         ))}
+        <MenuLink to="/privacy" icon="shield" label={t('legal.privacyTitle')} />
         {operator.data && <MenuLink to="/operator" icon="shield" label={t('operator.title')} />}
       </ul>
 

@@ -28,3 +28,4 @@ Short records of gaps or conflicts in the spec and the choice made. Newest at th
 22. **Removing a member uses a second tap, not undo.** Removal can't be undone from the client, so the button asks for a second tap instead of showing an undo toast. Everything else that can be reversed uses undo.
 23. **Lists, Stuff, Plans, and Scan tabs show "coming soon" until their phases.** Module toggles already hide their tabs.
 24. **The Me page keeps a reward placeholder.** It shows where levels, badges, and coins will go, with no numbers, until Phase 2.
+25. **Privacy and Terms pages shipped early.** Google won't publish a sign-in app without privacy and terms links, so public `/privacy` and `/terms` pages ship now (spec 4.1 plans the Privacy page for Phase 7). They name the operator for signed-in visitors and speak generically otherwise. Self-serve export and deletion remain Phase 7, and the page says so.

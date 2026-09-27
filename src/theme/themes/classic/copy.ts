@@ -161,6 +161,45 @@ export const classicCopy = {
   'color.sage': 'Sage',
   'color.sand': 'Sand',
 
+  // --- Privacy and terms (public pages) ---
+  'legal.privacyTitle': 'Privacy',
+  'legal.termsTitle': 'Terms',
+  'legal.privacyLink': 'Privacy',
+  'legal.termsLink': 'Terms',
+  'legal.updated': 'Last updated: {date}',
+  'legal.runBy': 'This copy of Spawnpoint is run by {name}.',
+  'legal.runByUnknown':
+    'This copy of Spawnpoint is run by an independent operator: the person who invited you.',
+  'legal.openSource':
+    'Spawnpoint is open-source software. Each copy is run by its own operator, not by the people who wrote the software.',
+  'legal.p.googleTitle': 'What we get from Google',
+  'legal.p.google':
+    'When you sign in with Google, we receive only your name, email address, and profile picture link (the basic openid, email, and profile permissions). We never see your Google password, and we can’t read your Gmail, Drive, Calendar, or anything else in your Google account.',
+  'legal.p.useTitle': 'How that information is used',
+  'legal.p.use':
+    'Your email is used to sign you in and to check whether you’re allowed to run this copy. Your Google name is only a suggestion for your display name, which you choose yourself. Google user data is used only to provide the app, never for advertising, never sold, and never shared with anyone else.',
+  'legal.p.storedTitle': 'What’s stored',
+  'legal.p.stored':
+    'Your account (email and sign-in records), your household membership, your display name, avatar, color, and theme, and what your household adds: areas, tasks, and who did what and when.',
+  'legal.p.whoTitle': 'Who can see it',
+  'legal.p.who':
+    'Only members of your household can see your household’s data. Other households can’t, and the database enforces this. Your personal levels and coins, when they arrive, are visible only to you. The operator of this copy can technically access the database, but the app gives them no way to browse household content: their operator page shows only counts and storage sizes.',
+  'legal.p.whereTitle': 'Where it lives',
+  'legal.p.where':
+    'Data is stored with Supabase (database and sign-in) and the app is served by Netlify. There are no ads and no third-party analytics.',
+  'legal.p.controlTitle': 'Your choices',
+  'legal.p.control':
+    'You can leave your household at any time in Household settings. To delete your account or your household’s data, ask the operator of this copy; self-serve export and deletion are coming. You can also remove Spawnpoint’s access at any time in your Google Account under Security, Third-party apps & services.',
+  'legal.p.contactTitle': 'Questions',
+  'legal.p.contact': 'Contact the operator of this copy, the person who invited you.',
+  'legal.t.use':
+    'Spawnpoint is a free tool for households to share chores and home information. It’s provided as is, without warranties, by the operator of this copy.',
+  'legal.t.invite':
+    'Access is by invitation. Please use it only for your own household, and don’t upload anything you don’t have the right to share or anything illegal.',
+  'legal.t.availability':
+    'The operator may change or stop running this copy at any time. Keep your own copies of important documents.',
+  'legal.t.privacy': 'How your information is handled is described in the Privacy page.',
+
   // --- Modules ---
   'module.chores': 'Chores',
   'module.lists': 'Lists',
