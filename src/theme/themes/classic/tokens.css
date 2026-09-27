@@ -1,0 +1,62 @@
+/* Classic: the neutral default. Clean, friendly, and calm. */
+[data-app-theme='classic'] {
+  --bg: #f6f7f9;
+  --surface: #ffffff;
+  --surface-2: #eef1f6;
+  --ink: #1e2430;
+  --ink-muted: #566072;
+  --line: #dce1ea;
+  --primary: #3b6fe0;
+  --primary-ink: #ffffff;
+  --secondary: #22a38a;
+  --on-secondary: #10231f;
+  --accent: #f2a93b;
+  --on-accent: #1e2430;
+  --success: #2fae78;
+  --on-success: #0f231b;
+  --warning: #f0b44c;
+  --on-warning: #2a1e08;
+  --danger: #c93c3c;
+  --on-danger: #ffffff;
+
+  --radius: 14px;
+  --panel-cut: none;
+  --panel-border: inset 0 0 0 1px var(--line);
+  --shadow-card: 0 1px 2px rgb(30 36 48 / 0.06), 0 6px 18px rgb(30 36 48 / 0.06);
+  --shadow-press: 0 3px 0 color-mix(in srgb, var(--primary) 65%, #0b1633);
+  --press-depth: 3px;
+  --panel-corner: transparent;
+  --meter-texture: none;
+  --tab-skew: 0deg;
+  --display-transform: none;
+  --display-tracking: -0.01em;
+  --display-weight: 800;
+
+  --font-display: 'Nunito', ui-rounded, system-ui, sans-serif;
+  --font-body: 'Nunito Sans', system-ui, sans-serif;
+  --font-num: 'Nunito', ui-rounded, system-ui, sans-serif;
+}
+
+[data-app-theme='classic'][data-theme='dark'] {
+  --bg: #12161e;
+  --surface: #1b212c;
+  --surface-2: #252c39;
+  --ink: #e9edf4;
+  --ink-muted: #a6b0c0;
+  --line: #313a4a;
+  --primary: #6f98f2;
+  --primary-ink: #0e1320;
+  --secondary: #3cc4a6;
+  --on-secondary: #0b1a17;
+  --accent: #f5b85a;
+  --on-accent: #1e1608;
+  --success: #45c98f;
+  --on-success: #0b1a12;
+  --warning: #f2bd5e;
+  --on-warning: #1e1608;
+  --danger: #f07a7a;
+  --on-danger: #1f0b0b;
+
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.3), 0 8px 24px rgb(0 0 0 / 0.25);
+  --shadow-press: 0 3px 0 color-mix(in srgb, var(--primary) 55%, #000000);
+}

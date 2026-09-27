@@ -1,0 +1,23 @@
+# dependencies and builds
+node_modules
+dist
+dev-dist
+coverage
+*.tsbuildinfo
+.netlify
+playwright-report
+test-results
+
+# secrets and personal data: never commit
+.env*
+!.env.example
+supabase/seed.local.sql
+supabase/.temp
+supabase/.branches
+
+# editors and OS
+.DS_Store
+.vscode/*
+!.vscode/extensions.json
+.idea
+*.log
