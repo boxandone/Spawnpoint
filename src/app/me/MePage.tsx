@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom';
-import { Avatar, Icon, Panel, SectionTitle, Tag, type IconName } from '@/components/ui';
+import { Avatar, Icon, IconButton, Panel, SectionTitle, Tag, type IconName } from '@/components/ui';
 import { signOut } from '@/modules/households/api';
 import { useHousehold } from '@/modules/households/context';
-import { useIsOperator } from '@/modules/households/hooks';
-import { BadgeFrame, useCopy, usePack, type CopyKey } from '@/theme';
+import { useIsOperator, useUpdateProfile } from '@/modules/households/hooks';
+import { BadgeFrame, useCopy, usePack, type CopyKey, type ModePreference } from '@/theme';
 import { APP_VERSION } from '../updates/releases';
 import { useUnseenUpdate } from '../updates/useUpdates';
 
@@ -39,6 +39,17 @@ export function MePage() {
   const { member, household } = useHousehold();
   const operator = useIsOperator();
   const { unseen } = useUnseenUpdate();
+  const updateProfile = useUpdateProfile();
+  const nextMode: Record<ModePreference, ModePreference> = {
+    system: 'light',
+    light: 'dark',
+    dark: 'system',
+  };
+  const modeIcon: Record<ModePreference, IconName> = {
+    system: 'palette',
+    light: 'sun',
+    dark: 'moon',
+  };
 
   const more: Array<{ to: string; icon: IconName; label: CopyKey }> = [
     { to: '/areas', icon: 'zone', label: 'areas.title' },
@@ -51,6 +62,12 @@ export function MePage() {
   return (
     <div>
       <header className="flex flex-col items-center pb-2 pt-[calc(1.5rem+env(safe-area-inset-top))] text-center">
+        <IconButton
+          icon={modeIcon[member.mode]}
+          label={t('me.modeToggle', { mode: t(`settings.mode.${member.mode}` as CopyKey) })}
+          onClick={() => updateProfile.mutate({ mode: nextMode[member.mode] })}
+          className="self-end bg-surface shadow-card"
+        />
         <Avatar avatar={member.avatar} color={member.color} name={member.display_name} size={96} />
         <h1 className="mt-3 text-3xl">{member.display_name}</h1>
         <p className="text-ink-muted">
@@ -75,6 +92,7 @@ export function MePage() {
         {more.map((m) => (
           <MenuLink key={m.to} to={m.to} icon={m.icon} label={t(m.label)} />
         ))}
+        <MenuLink to="/help" icon="sparkle" label={t('help.menu')} />
         <MenuLink
           to="/updates"
           icon="sparkle"

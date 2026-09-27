@@ -209,6 +209,102 @@ export const classicCopy = {
   'updates.kind.improved': 'Better',
   'updates.kind.fixed': 'Fixed',
 
+  // --- Help, FAQ, guide mode, feedback ---
+  'help.title': 'Help',
+  'help.subtitle': 'Tips, answers, and a way to reach whoever runs this site.',
+  'help.menu': 'Help and feedback',
+  'help.guideMode': 'Guide mode',
+  'help.guideModeBody': 'Show little tips around the app.',
+  'help.resetTips': 'Show all tips again',
+  'help.tipsReset': 'Tips are back on',
+  'help.faqTitle': 'Questions people ask',
+  'help.contactTitle': 'Get in touch',
+  'help.contactBody':
+    'Messages go privately to whoever runs this site. Your household can’t see them.',
+  'help.report.bug': 'Report a bug',
+  'help.report.bugBody': 'Something broke or looks wrong',
+  'help.report.question': 'Ask a question',
+  'help.report.questionBody': 'Not sure how something works',
+  'help.report.idea': 'Suggest an idea',
+  'help.report.ideaBody': 'Something you’d love to see',
+  'help.q.done': 'How do I check something off?',
+  'help.a.done':
+    'Tap the circle next to it. That’s it. If you tapped by mistake, hit Undo in the message that pops up at the bottom. It stays for 6 seconds.',
+  'help.q.backdate': 'I did it yesterday, or someone else did it. How do I log that?',
+  'help.a.backdate':
+    'Press and hold the task (or tap the … button). You can pick Yesterday, 2 days ago, or any date, choose who did it, and add a count if the task has one, like “10 valves”.',
+  'help.q.skip': 'What if we’re skipping it this time?',
+  'help.a.skip':
+    'Press and hold the task and choose Skip. You can add a reason like “Away this week”. A skip counts as handled, so it won’t nag you.',
+  'help.q.waiting': 'What does “Waiting since” mean?',
+  'help.a.waiting':
+    'Some tasks are set to stay on Today until they’re done, even if the day passes. They show once, never piled up, and the most overdue ones come first. Others quietly let go when the day ends. You choose this per task under “If it’s missed”.',
+  'help.q.catchUp': 'I forgot to log a bunch of things this week.',
+  'help.a.catchUp':
+    'Use “What got done?” on Today. Tick everything that happened in the last week, pick the day for each, and log them all at once.',
+  'help.q.freshness': 'What are the bars on Areas?',
+  'help.a.freshness':
+    'Freshness: the share of tasks in that area that are up to date. It’s a gentle nudge, never a score.',
+  'help.q.rotation': 'What is zone rotation?',
+  'help.a.rotation':
+    'Give each weekday an area, like Monday for the kitchen. Weekly tasks in that area move to that day, so each day has a focus. Set it in Household settings.',
+  'help.q.theme': 'How do I change the look, or switch to dark mode?',
+  'help.a.theme':
+    'Tap the sun or moon at the top of Me to switch between system, light, and dark. For themes, go to Me, then Personal settings. Everyone in the household can pick their own theme.',
+  'help.q.invite': 'How do I add my partner or housemate?',
+  'help.a.invite':
+    'The household owner can make an invite link in Household settings. It works once and lasts 7 days. They open it, sign in with Google, and they’re in.',
+  'help.q.install': 'Can I put it on my home screen?',
+  'help.a.install':
+    'Yes. On iPhone, open the site in Safari, tap Share, then Add to Home Screen. On Android, tap the ⋮ menu, then Install app. It then opens like a normal app and updates itself.',
+  'help.q.private': 'Who can see my stuff?',
+  'help.a.private':
+    'Only people in your household. Other households can’t, and the person who runs this site only sees counts, never what’s inside. See the Privacy page for details.',
+  'help.q.numbers': 'Are we being compared or scored?',
+  'help.a.numbers':
+    'No. There are no leaderboards and nothing is ever taken away. Levels and coins (coming soon) are visible only to you.',
+  'feedback.title.bug': 'Report a bug',
+  'feedback.title.question': 'Ask a question',
+  'feedback.title.idea': 'Suggest an idea',
+  'feedback.label.bug': 'What happened?',
+  'feedback.label.question': 'Your question',
+  'feedback.label.idea': 'Your idea',
+  'feedback.hint.bug':
+    'What you tapped, what you expected, and what you saw instead. Screenshots aren’t supported yet.',
+  'feedback.hint.question': 'Ask anything about using the app.',
+  'feedback.hint.idea': 'Big or small, it all helps.',
+  'feedback.send': 'Send',
+  'feedback.sent': 'Sent. Thank you!',
+  'feedback.tooMany': 'That’s a lot of messages for one day. Try again tomorrow.',
+  'feedback.privacy':
+    'Goes privately to whoever runs this site, with the page you were on and the app version.',
+  'feedback.yours': 'Your messages',
+  'feedback.status.open': 'Sent',
+  'feedback.status.done': 'Handled',
+  'feedback.reply': 'Reply: {note}',
+  'feedback.operatorTitle': 'Feedback',
+  'feedback.operatorEmpty': 'Nothing waiting. All caught up.',
+  'feedback.markDone': 'Mark handled',
+  'feedback.reopen': 'Reopen',
+  'feedback.notePlaceholder': 'Optional reply the sender will see',
+  'feedback.showHandled': 'Show handled',
+  'feedback.from': 'Household #{ref}',
+  'feedback.noHousehold': 'No household yet',
+  'feedback.kind.bug': 'Bug',
+  'feedback.kind.question': 'Question',
+  'feedback.kind.idea': 'Idea',
+  'tip.label': 'Tip',
+  'tip.dismiss': 'Got it',
+  'tip.today.longpress':
+    'Press and hold a task to log it for another day, for someone else, or to skip it.',
+  'tip.today.undo': 'Tapped by mistake? Every check-off shows an Undo for 6 seconds.',
+  'tip.catchUp': 'Tick what happened, pick the day, then log them all at once.',
+  'tip.editor.ifMissed':
+    '“Keep it on Today” is for things that really need doing. “Let it go” is for nice-to-haves that can wait for next time.',
+  'tip.areas': 'Freshness shows how up to date each area is. It’s never a score.',
+  'tip.rotation': 'Zone rotation gives each weekday an area. Weekly tasks there move to that day.',
+  'me.modeToggle': 'Light or dark: {mode}',
+
   // --- Modules ---
   'module.chores': 'Chores',
   'module.lists': 'Lists',

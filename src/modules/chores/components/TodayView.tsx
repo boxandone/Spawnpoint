@@ -28,6 +28,8 @@ export interface TodayViewProps {
   onAdd?: () => void;
   onCatchUp?: () => void;
   onUpcoming?: () => void;
+  /** Guide-mode tips, shown under the weekly meter. */
+  tips?: React.ReactNode;
 }
 
 /**
@@ -80,6 +82,7 @@ export function TodayView(props: TodayViewProps) {
       </header>
 
       <WeeklyMeter value={props.meter.value} target={props.meter.target} />
+      {props.tips && <div className="mt-3 flex flex-col gap-2">{props.tips}</div>}
 
       {(props.zoneNames.length > 0 || props.onFilter) && (
         <div className="mt-3 flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">

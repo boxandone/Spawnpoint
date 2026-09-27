@@ -12,6 +12,8 @@ import { UpcomingPage } from './chores/UpcomingPage';
 import { AuthGate } from './gates/AuthGate';
 import { HouseholdGate } from './gates/HouseholdGate';
 import { PrivacyPage, TermsPage } from './legal/LegalPages';
+import { FeedbackPage } from './help/FeedbackPage';
+import { HelpPage } from './help/HelpPage';
 import { MePage } from './me/MePage';
 import { UpdatesPage } from './updates/UpdatesPage';
 import { InviteProblemRoute, NotFound } from './NotFound';
@@ -52,6 +54,8 @@ export const router = createBrowserRouter([
     errorElement: <InviteProblemRoute />,
     children: [
       { path: '/welcome', element: <NeedInvitePage /> },
+      { path: '/help', element: <HelpPage /> },
+      { path: '/help/feedback/:kind', element: <FeedbackPage /> },
       {
         path: '/setup',
         element: (

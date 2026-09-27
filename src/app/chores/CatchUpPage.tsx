@@ -9,6 +9,7 @@ import { catchUp } from '@/modules/chores/logic';
 import { useHousehold } from '@/modules/households/context';
 import { locationLabel } from '@/modules/locations/logic';
 import { EffortIcon, useCopy } from '@/theme';
+import { Tip } from '../help/Tip';
 
 /** "What got done?" Tick things from the last week, pick a day for each, log them all at once. */
 export function CatchUpPage() {
@@ -50,6 +51,7 @@ export function CatchUpPage() {
   return (
     <div>
       <PageHeader title={t('catchUp.title')} subtitle={t('catchUp.body')} back="/" />
+      <Tip id="catchUp" text="tip.catchUp" className="mb-2" />
       {rows.length === 0 ? (
         <Panel className="mt-4">
           <EmptyState icon="sparkle" title={t('catchUp.empty')} />

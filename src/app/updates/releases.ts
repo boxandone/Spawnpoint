@@ -17,6 +17,29 @@ export interface Release {
 
 export const RELEASES: readonly Release[] = [
   {
+    version: '0.3.0',
+    date: '2026-09-27',
+    title: 'Help, tips, and a quick dark mode switch',
+    changes: [
+      {
+        kind: 'new',
+        text: 'Help: answers to common questions, from logging yesterday’s tasks to installing the app.',
+      },
+      {
+        kind: 'new',
+        text: 'Report a bug, ask a question, or suggest an idea. It goes privately to whoever runs this site, and you can see their reply.',
+      },
+      {
+        kind: 'new',
+        text: 'Guide mode: small tips on the screens where they help. Turn it off or bring every tip back in Help.',
+      },
+      {
+        kind: 'improved',
+        text: 'Switch between system, light, and dark with one tap at the top of Me.',
+      },
+    ],
+  },
+  {
     version: '0.2.1',
     date: '2026-09-27',
     title: 'Clearer invites for operators',

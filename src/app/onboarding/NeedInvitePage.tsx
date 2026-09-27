@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { Button, Icon, Logo, Panel, Splash, TextField } from '@/components/ui';
 import { peekInvite, signOut } from '@/modules/households/api';
 import { useMembershipQuery, usePublicConfig } from '@/modules/households/hooks';
@@ -99,10 +99,16 @@ export function NeedInvitePage() {
         </Panel>
       )}
 
+      <Link
+        to="/help"
+        className="mx-auto mt-8 inline-flex min-h-[44px] items-center px-3 text-sm font-bold text-ink-muted underline underline-offset-2"
+      >
+        {t('help.menu')}
+      </Link>
       <button
         type="button"
         onClick={() => void signOut()}
-        className="mx-auto mt-8 inline-flex min-h-[44px] items-center gap-2 px-3 text-sm font-bold text-ink-muted"
+        className="mx-auto mt-1 inline-flex min-h-[44px] items-center gap-2 px-3 text-sm font-bold text-ink-muted"
       >
         <Icon name="logout" size={18} />
         {t('auth.signOut')}

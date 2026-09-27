@@ -10,6 +10,7 @@ import type { ChoreTask } from '@/modules/chores/types';
 import { useHousehold } from '@/modules/households/context';
 import { locationLabel } from '@/modules/locations/logic';
 import { useCopy } from '@/theme';
+import { TipQueue } from '../help/Tip';
 
 export function TodayPage() {
   const t = useCopy();
@@ -79,6 +80,16 @@ export function TodayPage() {
         onAdd={() => navigate('/tasks/new')}
         onCatchUp={() => navigate('/catch-up')}
         onUpcoming={() => navigate('/upcoming')}
+        tips={
+          view.due.length + view.waiting.length > 0 ? (
+            <TipQueue
+              tips={[
+                { id: 'today.longpress', text: 'tip.today.longpress' },
+                { id: 'today.undo', text: 'tip.today.undo' },
+              ]}
+            />
+          ) : undefined
+        }
       />
       <TaskActionSheet
         task={menuTask}

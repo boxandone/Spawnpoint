@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { TabBar, type TabItem } from '@/components/ui';
 import { useHousehold } from '@/modules/households/context';
@@ -11,6 +12,14 @@ export function AppShell() {
   const m = settings.modules;
   const { pathname } = useLocation();
   const { unseen } = useUnseenUpdate();
+  // Bug reports include the last screen someone was on (no ids or content).
+  useEffect(() => {
+    try {
+      sessionStorage.setItem('sp.lastPath', pathname.replace(/[0-9a-f-]{36}/g, ':id'));
+    } catch {
+      /* ignore */
+    }
+  }, [pathname]);
   const items: TabItem[] = [
     { to: '/', label: t('nav.today'), icon: 'today', end: true },
     ...(m.lists ? [{ to: '/lists', label: t('nav.lists'), icon: 'lists' as const }] : []),

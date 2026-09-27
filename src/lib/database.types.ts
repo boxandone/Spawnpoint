@@ -6,6 +6,34 @@ export type Json = string | number | boolean | null | { [key: string]: Json | un
 export type Database = {
   public: {
     Tables: {
+      feedback: {
+        Row: {
+          id: string;
+          user_id: string;
+          household_id: string | null;
+          kind: string;
+          message: string;
+          page: string | null;
+          app_version: string | null;
+          user_agent: string | null;
+          status: string;
+          operator_note: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          kind: string;
+          message: string;
+          page?: string | null;
+          app_version?: string | null;
+          user_agent?: string | null;
+        };
+        Update: {
+          status?: string;
+          operator_note?: string | null;
+        };
+        Relationships: [];
+      };
       households: {
         Row: {
           id: string;
@@ -402,6 +430,10 @@ export type Database = {
       remove_member: { Args: { p_member_id: string }; Returns: undefined };
       revoke_invite: { Args: { p_invite_id: string }; Returns: undefined };
       rename_invite: { Args: { p_invite_id: string; p_label: string }; Returns: undefined };
+      set_feedback_status: {
+        Args: { p_id: string; p_status: string; p_note?: string };
+        Returns: undefined;
+      };
       set_member_role: { Args: { p_member_id: string; p_role: string }; Returns: undefined };
       sync_config: { Args: { p_operator_emails: string[]; p_config: Json }; Returns: Json };
     };

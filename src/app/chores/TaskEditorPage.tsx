@@ -19,6 +19,7 @@ import { useHousehold } from '@/modules/households/context';
 import { buildTree } from '@/modules/locations/logic';
 import { DEEDS } from '@/modules/rewards/deeds';
 import { EffortIcon, useCopy } from '@/theme';
+import { Tip } from '../help/Tip';
 
 const EMPTY: TaskInput = {
   title: '',
@@ -140,6 +141,7 @@ export function TaskEditorPage() {
         />
       )}
 
+      <Tip id="editor.ifMissed" text="tip.editor.ifMissed" />
       <Segmented<IfMissed>
         label={t('task.ifMissed')}
         value={form.if_missed}
