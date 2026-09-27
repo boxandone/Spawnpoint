@@ -23,3 +23,8 @@ Short records of gaps or conflicts in the spec and the choice made. Newest at th
 17. **Deed catalog added early as data.** `src/modules/rewards/deeds.ts` holds the Appendix B catalog now so the starter library's `deed_key`s are validated by a test. No reward logic exists until Phase 2.
 18. **Local database tests without Docker images.** CI runs `supabase test db`. When the Supabase stack isn't available, `scripts/test-db.sh` starts a throwaway Postgres with pgTAP and a small shim (`supabase/tests/shim/`) that recreates the parts of Supabase the migrations use: roles, default grants, `auth.users`, `auth.uid()`, `auth.jwt()`, and the realtime publication.
 19. **Operator page identifies households by a short id.** Sizes are shown per household with the first 8 characters of its id, never its name, so the operator page reveals nothing about what's inside.
+20. **Scan floats over the tab screens only.** The Scan button floats above the tab bar on Today, Lists, Stuff, Plans, and Me, and hides on sub-pages so it never covers their own buttons (like Catch-up's submit). The five tabs keep the spec's order.
+21. **Freshness bars never turn red.** They use success, accent, and secondary colors. A low bar is a nudge, not a warning, in keeping with "never shame".
+22. **Removing a member uses a second tap, not undo.** Removal can't be undone from the client, so the button asks for a second tap instead of showing an undo toast. Everything else that can be reversed uses undo.
+23. **Lists, Stuff, Plans, and Scan tabs show "coming soon" until their phases.** Module toggles already hide their tabs.
+24. **The Me page keeps a reward placeholder.** It shows where levels, badges, and coins will go, with no numbers, until Phase 2.

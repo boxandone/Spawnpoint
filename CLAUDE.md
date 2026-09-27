@@ -23,10 +23,14 @@ Keep this section current as you add scripts.
 ```
 npm run dev          # Vite dev server
 npm run build        # production build
+npm run preview      # serve the production build
 npm run typecheck    # tsc --noEmit
 npm run lint         # eslint
+npm run format       # prettier --write (format:check in CI)
 npm test             # vitest
-npm run test:db      # pgTAP tests against local Supabase
+npm run test:db      # pgTAP tests: supabase test db, or a throwaway Postgres + scripts/db shim
+npm run test:e2e     # Playwright smoke tests (builds, then serves on :4173)
+npm run icons        # re-render PNG app icons from public/favicon.svg
 supabase start       # local Supabase (Docker)
 supabase db reset    # re-run migrations + seed.sql
 npm run db:types     # supabase gen types typescript --local > src/lib/database.types.ts
