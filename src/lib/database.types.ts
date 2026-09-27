@@ -19,7 +19,7 @@ export type Database = {
         Relationships: [];
       };
       xp_events: {
-        Row: { id: string; household_id: string; member_id: string; source_kind: string; completion_id: string | null; deed_log_id: string | null; day: string; raw_xp: number; credited_xp: number; capped: boolean; created_at: string };
+        Row: { id: string; household_id: string; member_id: string; source_kind: string; completion_id: string | null; deed_log_id: string | null; shopping_trip_id: string | null; day: string; raw_xp: number; credited_xp: number; capped: boolean; created_at: string };
         Insert: { [key: string]: never };
         Update: { [key: string]: never };
         Relationships: [];
@@ -50,6 +50,146 @@ export type Database = {
       };
       feed_events: {
         Row: { id: string; household_id: string; member_id: string; kind: string; payload: Json; created_at: string };
+        Insert: { [key: string]: never };
+        Update: { [key: string]: never };
+        Relationships: [];
+      };
+      lists: {
+        Row: {
+          id: string;
+          household_id: string;
+          kind: string;
+          name: string | null;
+          icon: string | null;
+          position: number;
+          archived_at: string | null;
+          created_at: string;
+          updated_at: string;
+          created_by: string | null;
+        };
+        Insert: {
+          id?: string;
+          household_id: string;
+          kind: string;
+          name?: string | null;
+          icon?: string | null;
+          position?: number;
+          archived_at?: string | null;
+        };
+        Update: {
+          name?: string | null;
+          icon?: string | null;
+          position?: number;
+          archived_at?: string | null;
+        };
+        Relationships: [];
+      };
+      list_items: {
+        Row: {
+          id: string;
+          household_id: string;
+          list_id: string;
+          name: string;
+          quantity: string | null;
+          category: string | null;
+          status: string | null;
+          priority: string;
+          target_price: number | null;
+          links: string[];
+          location_id: string | null;
+          bought_on: string | null;
+          due_on: string | null;
+          assignee_id: string | null;
+          discuss: boolean;
+          notes: string | null;
+          checked: boolean;
+          checked_at: string | null;
+          checked_by: string | null;
+          position: number;
+          created_at: string;
+          updated_at: string;
+          created_by: string | null;
+        };
+        Insert: {
+          id?: string;
+          household_id: string;
+          list_id: string;
+          name: string;
+          quantity?: string | null;
+          category?: string | null;
+          status?: string | null;
+          priority?: string;
+          target_price?: number | null;
+          links?: string[];
+          location_id?: string | null;
+          bought_on?: string | null;
+          due_on?: string | null;
+          assignee_id?: string | null;
+          discuss?: boolean;
+          notes?: string | null;
+          checked?: boolean;
+          checked_at?: string | null;
+          position?: number;
+        };
+        Update: {
+          name?: string;
+          quantity?: string | null;
+          category?: string | null;
+          status?: string | null;
+          priority?: string;
+          target_price?: number | null;
+          links?: string[];
+          location_id?: string | null;
+          bought_on?: string | null;
+          due_on?: string | null;
+          assignee_id?: string | null;
+          discuss?: boolean;
+          notes?: string | null;
+          checked?: boolean;
+          position?: number;
+        };
+        Relationships: [];
+      };
+      staples: {
+        Row: {
+          id: string;
+          household_id: string;
+          name: string;
+          quantity: string | null;
+          category: string | null;
+          position: number;
+          created_at: string;
+          updated_at: string;
+          created_by: string | null;
+        };
+        Insert: {
+          id?: string;
+          household_id: string;
+          name: string;
+          quantity?: string | null;
+          category?: string | null;
+          position?: number;
+        };
+        Update: {
+          name?: string;
+          quantity?: string | null;
+          category?: string | null;
+          position?: number;
+        };
+        Relationships: [];
+      };
+      shopping_trips: {
+        Row: {
+          id: string;
+          household_id: string;
+          member_id: string;
+          day: string;
+          items: Json;
+          item_count: number;
+          created_at: string;
+          updated_at: string;
+          created_by: string | null;
+        };
         Insert: { [key: string]: never };
         Update: { [key: string]: never };
         Relationships: [];
@@ -481,6 +621,18 @@ export type Database = {
       redeem_reward: { Args: { p_reward_id: string; p_post?: boolean }; Returns: Json };
       undo_deed_log: { Args: { p_id: string }; Returns: undefined };
       undo_redemption: { Args: { p_id: string }; Returns: undefined };
+      done_shopping: { Args: { p_list_id: string }; Returns: Json };
+      undo_done_shopping: { Args: { p_trip_id: string }; Returns: undefined };
+      grocery_suggestions: {
+        Args: { p_household_id: string };
+        Returns: Array<{
+          name: string;
+          quantity: string | null;
+          category: string | null;
+          times: number;
+          last_day: string;
+        }>;
+      };
       xp_for_level: { Args: { lvl: number }; Returns: number };
       is_member_of: { Args: { hid: string }; Returns: boolean };
       is_operator: { Args: Record<PropertyKey, never>; Returns: boolean };
