@@ -140,6 +140,17 @@ export const classicCopy = {
   'setup.inviteCreate': 'Make an invite link',
   'setup.finish': 'Go to Today',
 
+  // --- Starter library sections ---
+  'library.section.kitchen': 'Kitchen',
+  'library.section.living': 'Living areas and office',
+  'library.section.bedrooms': 'Bedrooms',
+  'library.section.bathrooms': 'Bathrooms',
+  'library.section.laundry': 'Laundry',
+  'library.section.pets': 'Pets',
+  'library.section.pool': 'Pool',
+  'library.section.yard': 'Yard, driveway, side yard',
+  'library.section.systems': 'Systems and safety',
+
   // --- Modules ---
   'module.chores': 'Chores',
   'module.lists': 'Lists',
