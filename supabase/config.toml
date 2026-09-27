@@ -1,0 +1,60 @@
+# Local Supabase stack for development (`supabase start`).
+# Production is configured in the Supabase dashboard; see README "Operator setup".
+project_id = "spawnpoint"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public", "graphql_public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[db]
+port = 54322
+shadow_port = 54320
+major_version = 17
+
+[db.seed]
+enabled = true
+# seed.local.sql is gitignored: put anything personal there.
+sql_paths = ["./seed.sql", "./seed.local.sql"]
+
+[realtime]
+enabled = true
+
+[studio]
+enabled = true
+port = 54323
+
+[inbucket]
+enabled = true
+port = 54324
+
+[storage]
+enabled = true
+file_size_limit = "20MiB"
+
+[auth]
+enabled = true
+site_url = "http://localhost:5173"
+additional_redirect_urls = [
+  "http://localhost:5173/auth/callback",
+  "http://127.0.0.1:5173/auth/callback",
+]
+jwt_expiry = 3600
+enable_refresh_token_rotation = true
+enable_signup = true
+
+# Local development only: lets the fictional seed users sign in with a password
+# (the app shows this form only when VITE_DEV_EMAIL_LOGIN=true in dev mode).
+# In production, only the Google provider is enabled.
+[auth.email]
+enable_signup = true
+enable_confirmations = false
+
+# To try real Google sign-in locally, set these env vars and flip enabled to true.
+[auth.external.google]
+enabled = false
+client_id = "env(SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_ID)"
+secret = "env(SUPABASE_AUTH_EXTERNAL_GOOGLE_SECRET)"
+skip_nonce_check = false
