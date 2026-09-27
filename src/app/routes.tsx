@@ -26,8 +26,9 @@ import { ComingSoon } from './placeholders/ComingSoon';
 
 /** Less-used screens load on demand to keep the first load small. */
 function Lazy({ load }: { load: () => Promise<{ default: ComponentType }> }) {
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const Component = useMemo(() => lazy(load), []);
+  // Each route passes its own (stable) loader. Keying on it matters: React
+  // reuses this component when moving between two lazy routes.
+  const Component = useMemo(() => lazy(load), [load]);
   return (
     <Suspense fallback={<Splash />}>
       <Component />
@@ -122,7 +123,22 @@ export const router = createBrowserRouter([
                   />
                 ),
               },
-              { path: '/lists', element: <ComingSoon title="lists.name" icon="lists" /> },
+              {
+                path: '/lists',
+                element: (
+                  <Lazy
+                    load={() => import('./lists/ListsPage').then((m) => ({ default: m.ListsPage }))}
+                  />
+                ),
+              },
+              {
+                path: '/lists/:id',
+                element: (
+                  <Lazy
+                    load={() => import('./lists/ListPage').then((m) => ({ default: m.ListPage }))}
+                  />
+                ),
+              },
               { path: '/stuff', element: <ComingSoon title="stuff.name" icon="stuff" /> },
               { path: '/plans', element: <ComingSoon title="plans.name" icon="plans" /> },
               { path: '/scan', element: <ComingSoon title="nav.scan" icon="scan" /> },

@@ -17,6 +17,41 @@ export interface Release {
 
 export const RELEASES: readonly Release[] = [
   {
+    version: '0.5.0',
+    date: '2026-09-27',
+    title: 'Lists: groceries, to buy, and to-do',
+    changes: [
+      {
+        kind: 'new',
+        text: 'Groceries: add items in a tap and they’re sorted into aisles on their own. Switch to Store to shop by aisle, then tap Done shopping.',
+      },
+      {
+        kind: 'new',
+        text: 'Staples: the things you buy every week, back on the list with one tap. Past purchases show up as suggestions while you type.',
+      },
+      {
+        kind: 'new',
+        text: 'To buy: keep ideas and planned purchases with a price, links, priority, and where it goes.',
+      },
+      {
+        kind: 'new',
+        text: 'To-do: household to-dos with a due date, who’s on it, and a “talk it over” flag.',
+      },
+      {
+        kind: 'new',
+        text: 'Make your own lists, like a packing list or gift ideas.',
+      },
+      {
+        kind: 'new',
+        text: 'Swipe an item right to check it off or left to remove it, and drag to reorder. Changes show up on everyone’s phone.',
+      },
+      {
+        kind: 'fixed',
+        text: 'Moving straight between some settings pages could show the wrong page.',
+      },
+    ],
+  },
+  {
     version: '0.4.0',
     date: '2026-09-27',
     title: 'Levels, badges, and a reward shop',

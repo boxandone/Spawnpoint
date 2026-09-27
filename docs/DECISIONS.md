@@ -39,3 +39,13 @@ Short records of gaps or conflicts in the spec and the choice made. Newest at th
 33. **Seasons use the calendar quarter in the household timezone,** with the same 10 goals each quarter, all reachable by a one-person household. Finishing 5 earns that season's Season track badge.
 34. **Single-threshold badges show as gold**, and a fourth tier (Active weeks at 52) uses the gold frame: packs draw three metals.
 35. **The share card is drawn on the device.** It's a canvas image of your name, avatar, level, badge count, and top three badges in your theme's colors, shared through the phone's share sheet or downloaded. Nothing is uploaded, and it never includes household data or XP and coin numbers.
+
+## Phase 3
+
+36. **Every household gets Groceries, To buy, and To-do.** A database trigger creates them with the household (and the migration adds them to existing ones). They can't be renamed or archived and take their names from the theme's words. Custom lists are named by the household and archived, never deleted.
+37. **One table for every list item.** `list_items` holds the fields of every list type (quantity and aisle for groceries; status, price, links, and area for to buy; due date, assignee, and "talk it over" for to-do). Unused fields stay empty. To buy uses `status` instead of `checked`.
+38. **Done shopping keeps a trip, not the items.** The checked items are removed from the list and saved in a `shopping_trips` row, which feeds suggestions (the last year of trips) and makes undo possible for 10 minutes. There's no separate history table.
+39. **Shopping trip XP is once a day.** The spec gives 10 XP for Done shopping. It's credited to the shopper, under the daily cap, for the first trip each day; more trips that day are still saved. This keeps "check one item, Done shopping" from being repeated for XP. Trips don't count as activity days for runs, seasons, or welcome back.
+40. **New items go on top.** Quick-add puts new items at the top of the list. Reordering changes only the moved item's position (halfway between its new neighbors). Store mode groups by aisle in a fixed order and doesn't reorder.
+41. **The category guess is a keyword map.** The last matching word wins, because the noun usually comes last ("orange juice" is a drink), a longer phrase wins a tie ("peanut butter" isn't dairy), and "frozen" always wins. The aisle can be changed on any item.
+42. **Store or List view is per device**, remembered in `localStorage`, since it depends on where you are, not on the household.

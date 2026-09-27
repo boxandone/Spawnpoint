@@ -468,6 +468,6 @@ export function linkLabel(url: string): string {
 /** Parse a price the way people type it: "$1,299.99" → 1299.99. */
 export function parsePrice(text: string): number | null {
   const n = Number(text.replace(/[^0-9.]/g, ''));
-  if (!text.trim() || !Number.isFinite(n) || n < 0 || n >= 10_000_000) return null;
+  if (!/\d/.test(text) || !Number.isFinite(n) || n < 0 || n >= 10_000_000) return null;
   return Math.round(n * 100) / 100;
 }

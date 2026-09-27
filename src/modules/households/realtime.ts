@@ -13,7 +13,11 @@ type Table =
   | 'deed_logs'
   | 'feed_events'
   | 'member_stats'
-  | 'badge_progress';
+  | 'badge_progress'
+  | 'lists'
+  | 'list_items'
+  | 'staples'
+  | 'shopping_trips';
 
 /** Subscribe to a household's changes. Realtime applies RLS, so only our rows arrive. */
 export function subscribeHousehold(
@@ -32,6 +36,10 @@ export function subscribeHousehold(
     // Own rows only (RLS): someone logging for you updates your level live.
     'member_stats',
     'badge_progress',
+    'lists',
+    'list_items',
+    'staples',
+    'shopping_trips',
   ];
   for (const table of scoped) {
     channel.on(
@@ -46,9 +54,11 @@ export function subscribeHousehold(
     () => onChange('households'),
   );
   // DELETE events can't be filtered and carry only the id (docs/DECISIONS.md #15).
-  channel.on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'completions' }, () =>
-    onChange('completions'),
-  );
+  for (const table of ['completions', 'list_items', 'staples'] as const) {
+    channel.on('postgres_changes', { event: 'DELETE', schema: 'public', table }, () =>
+      onChange(table),
+    );
+  }
   channel.subscribe();
   return () => {
     void supabase.removeChannel(channel);
@@ -75,6 +85,12 @@ export function useHouseholdRealtime(householdId: string, userId: string) {
           void qc.invalidateQueries({ queryKey: qk.weekXp(householdId) });
           void qc.invalidateQueries({ queryKey: qk.deedLogs(householdId) });
         }
+        if (table === 'lists') void qc.invalidateQueries({ queryKey: qk.lists(householdId) });
+        if (table === 'list_items')
+          void qc.invalidateQueries({ queryKey: qk.listItems(householdId) });
+        if (table === 'staples') void qc.invalidateQueries({ queryKey: qk.staples(householdId) });
+        if (table === 'shopping_trips')
+          void qc.invalidateQueries({ queryKey: qk.grocerySuggestions(householdId) });
         if (table === 'feed_events') void qc.invalidateQueries({ queryKey: qk.feed(householdId) });
         if (
           table === 'household_members' ||

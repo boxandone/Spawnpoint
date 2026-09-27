@@ -20,6 +20,8 @@ const FAQ = [
   'catchUp',
   'freshness',
   'rotation',
+  'shopping',
+  'staples',
   'theme',
   'invite',
   'install',

@@ -16,4 +16,9 @@ export const qk = {
   feed: (hid: string) => ['feed', hid] as const,
   weekXp: (hid: string) => ['weekXp', hid] as const,
   deedLogs: (hid: string) => ['deedLogs', hid] as const,
+  // Lists
+  lists: (hid: string) => ['lists', hid] as const,
+  listItems: (hid: string) => ['listItems', hid] as const,
+  staples: (hid: string) => ['staples', hid] as const,
+  grocerySuggestions: (hid: string) => ['grocerySuggestions', hid] as const,
 };

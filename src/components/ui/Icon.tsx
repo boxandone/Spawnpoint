@@ -77,6 +77,30 @@ const PATHS = {
     </>
   ),
   plus: <path d="M12 5v14M5 12h14" />,
+  cart: (
+    <>
+      <path d="M3 4h2.5l2.2 10.5h10.8L20.5 7H6.6" />
+      <circle cx="9" cy="19" r="1.6" />
+      <circle cx="17" cy="19" r="1.6" />
+    </>
+  ),
+  bag: (
+    <>
+      <path d="M5 8h14l-1 12.5H6Z" />
+      <path d="M9 10.5V7a3 3 0 0 1 6 0v3.5" />
+    </>
+  ),
+  grip: (
+    <>
+      <circle cx="9" cy="6.5" r="1.2" />
+      <circle cx="15" cy="6.5" r="1.2" />
+      <circle cx="9" cy="12" r="1.2" />
+      <circle cx="15" cy="12" r="1.2" />
+      <circle cx="9" cy="17.5" r="1.2" />
+      <circle cx="15" cy="17.5" r="1.2" />
+    </>
+  ),
+  chat: <path d="M4.5 5.5h15v10h-9l-4.5 3.5v-3.5H4.5Z" />,
   edit: (
     <>
       <path d="M4 20h4L19 9l-4-4L4 16Z" />
