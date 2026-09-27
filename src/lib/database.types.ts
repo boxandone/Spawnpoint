@@ -19,7 +19,7 @@ export type Database = {
         Relationships: [];
       };
       xp_events: {
-        Row: { id: string; household_id: string; member_id: string; source_kind: string; completion_id: string | null; deed_log_id: string | null; shopping_trip_id: string | null; day: string; raw_xp: number; credited_xp: number; capped: boolean; created_at: string };
+        Row: { id: string; household_id: string; member_id: string; source_kind: string; completion_id: string | null; deed_log_id: string | null; shopping_trip_id: string | null; item_id: string | null; document_id: string | null; day: string; raw_xp: number; credited_xp: number; capped: boolean; created_at: string };
         Insert: { [key: string]: never };
         Update: { [key: string]: never };
         Relationships: [];
@@ -105,6 +105,7 @@ export type Database = {
           checked: boolean;
           checked_at: string | null;
           checked_by: string | null;
+          item_id: string | null;
           position: number;
           created_at: string;
           updated_at: string;
@@ -129,6 +130,7 @@ export type Database = {
           notes?: string | null;
           checked?: boolean;
           checked_at?: string | null;
+          item_id?: string | null;
           position?: number;
         };
         Update: {
@@ -146,6 +148,7 @@ export type Database = {
           discuss?: boolean;
           notes?: string | null;
           checked?: boolean;
+          item_id?: string | null;
           position?: number;
         };
         Relationships: [];
@@ -186,6 +189,122 @@ export type Database = {
           day: string;
           items: Json;
           item_count: number;
+          created_at: string;
+          updated_at: string;
+          created_by: string | null;
+        };
+        Insert: { [key: string]: never };
+        Update: { [key: string]: never };
+        Relationships: [];
+      };
+      items: {
+        Row: {
+          id: string;
+          household_id: string;
+          name: string;
+          category: string;
+          brand: string | null;
+          model: string | null;
+          serial: string | null;
+          purchased_on: string | null;
+          price: number | null;
+          store: string | null;
+          warranty_until: string | null;
+          location_id: string | null;
+          spot: string | null;
+          tags: string[];
+          notes: string | null;
+          url: string | null;
+          barcode: string | null;
+          status: string;
+          status_changed_at: string | null;
+          status_changed_by: string | null;
+          archived_at: string | null;
+          created_at: string;
+          updated_at: string;
+          created_by: string | null;
+        };
+        Insert: {
+          id?: string;
+          household_id: string;
+          name: string;
+          category?: string;
+          brand?: string | null;
+          model?: string | null;
+          serial?: string | null;
+          purchased_on?: string | null;
+          price?: number | null;
+          store?: string | null;
+          warranty_until?: string | null;
+          location_id?: string | null;
+          spot?: string | null;
+          tags?: string[];
+          notes?: string | null;
+          url?: string | null;
+          barcode?: string | null;
+          status?: string;
+          archived_at?: string | null;
+        };
+        Update: {
+          name?: string;
+          category?: string;
+          brand?: string | null;
+          model?: string | null;
+          serial?: string | null;
+          purchased_on?: string | null;
+          price?: number | null;
+          store?: string | null;
+          warranty_until?: string | null;
+          location_id?: string | null;
+          spot?: string | null;
+          tags?: string[];
+          notes?: string | null;
+          url?: string | null;
+          barcode?: string | null;
+          status?: string;
+          archived_at?: string | null;
+        };
+        Relationships: [];
+      };
+      documents: {
+        Row: {
+          id: string;
+          household_id: string;
+          item_id: string | null;
+          kind: string;
+          title: string | null;
+          storage_path: string;
+          thumb_path: string | null;
+          mime_type: string;
+          size_bytes: number;
+          uploaded_at: string | null;
+          created_at: string;
+          updated_at: string;
+          created_by: string | null;
+        };
+        Insert: {
+          id?: string;
+          household_id: string;
+          item_id?: string | null;
+          kind: string;
+          title?: string | null;
+          storage_path: string;
+          thumb_path?: string | null;
+          mime_type: string;
+          size_bytes: number;
+        };
+        Update: {
+          kind?: string;
+          title?: string | null;
+        };
+        Relationships: [];
+      };
+      short_codes: {
+        Row: {
+          code: string;
+          household_id: string;
+          item_id: string | null;
+          location_id: string | null;
           created_at: string;
           updated_at: string;
           created_by: string | null;
@@ -622,6 +741,8 @@ export type Database = {
       undo_deed_log: { Args: { p_id: string }; Returns: undefined };
       undo_redemption: { Args: { p_id: string }; Returns: undefined };
       done_shopping: { Args: { p_list_id: string }; Returns: Json };
+      finalize_document: { Args: { p_id: string }; Returns: Json };
+      record_labels_printed: { Args: { p_count: number }; Returns: undefined };
       undo_done_shopping: { Args: { p_trip_id: string }; Returns: undefined };
       grocery_suggestions: {
         Args: { p_household_id: string };

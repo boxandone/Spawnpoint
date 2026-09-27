@@ -82,7 +82,9 @@ grant execute on function auth.uid(), auth.role(), auth.jwt() to anon, authentic
 create table storage.buckets (
   id text primary key,
   name text not null,
-  public boolean default false
+  public boolean default false,
+  file_size_limit bigint,
+  allowed_mime_types text[]
 );
 
 create table storage.objects (
@@ -91,7 +93,14 @@ create table storage.objects (
   name text,
   owner uuid,
   metadata jsonb,
-  created_at timestamptz default now()
+  created_at timestamptz default now(),
+  unique (bucket_id, name)
 );
+
+-- Like Supabase: clients reach files only through RLS policies on objects.
+alter table storage.objects enable row level security;
+grant usage on schema storage to anon, authenticated, service_role;
+grant select, insert, update, delete on storage.objects to authenticated, service_role;
+grant select on storage.buckets to authenticated, service_role;
 
 create publication supabase_realtime;
