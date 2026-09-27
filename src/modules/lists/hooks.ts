@@ -90,6 +90,7 @@ export function useItemMutations() {
           updated_at: now,
           created_by: null,
           ...r,
+          item_id: r.item_id ?? null,
         })),
         ...items,
       ]);
