@@ -1,0 +1,67 @@
+/* Squad HQ: a bright, friendly pre-match lobby. */
+[data-app-theme='squad-hq'] {
+  --bg: #e9eef5;
+  --surface: #ffffff;
+  --surface-2: #f1f4f9;
+  --ink: #1c2433;
+  --ink-muted: #505b70;
+  --line: #c9d3e1;
+  --primary: #ff8a2a;
+  --primary-ink: #1c2433;
+  --secondary: #2f9bff;
+  --on-secondary: #0b1830;
+  --accent: #ffd23f;
+  --on-accent: #1c2433;
+  --success: #22b573;
+  --on-success: #0b2016;
+  --warning: #ffb020;
+  --on-warning: #2a1c02;
+  --danger: #cf3036;
+  --on-danger: #ffffff;
+
+  --radius: 6px;
+  --panel-cut: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%);
+  --panel-border: inset 0 0 0 1px var(--line), inset 0 0 0 3px rgb(255 255 255 / 0.7);
+  --shadow-card: 0 2px 0 rgb(28 36 51 / 0.08), 0 8px 20px rgb(28 36 51 / 0.08);
+  --shadow-press: 0 4px 0 color-mix(in srgb, var(--primary) 60%, #4a2200);
+  --press-depth: 4px;
+  --panel-corner: var(--primary);
+  --meter-texture: repeating-linear-gradient(
+    -60deg,
+    transparent 0 8px,
+    rgb(255 255 255 / 0.28) 8px 12px
+  );
+  --tab-skew: -8deg;
+  --display-transform: uppercase;
+  --display-tracking: 0.05em;
+  --display-weight: 700;
+
+  --font-display: 'Chakra Petch', system-ui, sans-serif;
+  --font-body: 'Nunito', ui-rounded, system-ui, sans-serif;
+  --font-num: 'Chakra Petch', system-ui, sans-serif;
+}
+
+[data-app-theme='squad-hq'][data-theme='dark'] {
+  --bg: #0f1a2b;
+  --surface: #172538;
+  --surface-2: #1f3048;
+  --ink: #eaf1fb;
+  --ink-muted: #a7b6cc;
+  --line: #2d4260;
+  --primary: #ff9a3d;
+  --primary-ink: #141c2a;
+  --secondary: #56b0ff;
+  --on-secondary: #0a1524;
+  --accent: #ffd23f;
+  --on-accent: #1c2433;
+  --success: #3dd68c;
+  --on-success: #06190f;
+  --warning: #ffc04d;
+  --on-warning: #211502;
+  --danger: #ff6b6b;
+  --on-danger: #1f0808;
+
+  --panel-border: inset 0 0 0 1px var(--line), inset 0 0 0 3px rgb(255 255 255 / 0.05);
+  --shadow-card: 0 2px 0 rgb(0 0 0 / 0.3), 0 10px 24px rgb(0 0 0 / 0.3);
+  --shadow-press: 0 4px 0 color-mix(in srgb, var(--primary) 50%, #000000);
+}

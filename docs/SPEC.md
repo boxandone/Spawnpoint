@@ -371,8 +371,8 @@ Every household-owned table has `id` (uuid), `household_id`, `created_at`, `upda
 
 Claude Code ticks items off here as they ship.
 
-- [ ] Phase 0 — Foundation
-- [ ] Phase 1 — Chores
+- [x] Phase 0 — Foundation
+- [x] Phase 1 — Chores
 - [ ] Phase 2 — Rewards
 - [ ] Phase 3 — Lists
 - [ ] Phase 4 — Stuff
