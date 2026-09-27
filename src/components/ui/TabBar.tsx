@@ -7,6 +7,9 @@ export interface TabItem {
   label: string;
   icon: IconName;
   end?: boolean;
+  /** A small dot for something new (announced to screen readers via badgeLabel). */
+  badge?: boolean;
+  badgeLabel?: string;
 }
 
 interface TabBarProps {
@@ -73,12 +76,16 @@ function Tab({ item }: { item: TabItem }) {
               )}
               aria-hidden
             />
-            <Icon
-              name={item.icon}
-              size={22}
-              className="relative"
-              strokeWidth={isActive ? 2.4 : 2}
-            />
+            <span className="relative">
+              <Icon name={item.icon} size={22} strokeWidth={isActive ? 2.4 : 2} />
+              {item.badge && (
+                <span
+                  className="absolute -right-1 -top-0.5 h-2.5 w-2.5 rounded-full bg-accent ring-2 ring-surface"
+                  aria-hidden
+                />
+              )}
+            </span>
+            {item.badge && item.badgeLabel && <span className="sr-only">{item.badgeLabel}</span>}
             <span className="relative max-w-full truncate font-display">{item.label}</span>
           </>
         )}

@@ -13,6 +13,7 @@ import { AuthGate } from './gates/AuthGate';
 import { HouseholdGate } from './gates/HouseholdGate';
 import { PrivacyPage, TermsPage } from './legal/LegalPages';
 import { MePage } from './me/MePage';
+import { UpdatesPage } from './updates/UpdatesPage';
 import { InviteProblemRoute, NotFound } from './NotFound';
 import { NeedInvitePage } from './onboarding/NeedInvitePage';
 import { JoinInvitePage, StartInvitePage } from './onboarding/InvitePages';
@@ -86,6 +87,7 @@ export const router = createBrowserRouter([
               { path: '/tasks/new', element: <TaskEditorPage /> },
               { path: '/tasks/:id', element: <TaskEditorPage /> },
               { path: '/me', element: <MePage /> },
+              { path: '/updates', element: <UpdatesPage /> },
               {
                 path: '/settings/personal',
                 element: (

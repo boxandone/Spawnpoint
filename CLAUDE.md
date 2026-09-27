@@ -76,6 +76,7 @@ docs/                  SPEC.md, THEMES.md, DECISIONS.md, PLAN.md
 - Keep components small. Don't add a UI library without a reason written in `docs/DECISIONS.md`.
 - Commit in small, working steps with clear messages.
 - When a phase item ships, tick it in the Status section of `docs/SPEC.md`.
+- When a user-visible change ships, bump `version` in `package.json` and add a matching entry to `src/app/updates/releases.ts` (the "What's new" page). Keep notes short, plain, and free of theme vocabulary.
 
 ## Theming
 

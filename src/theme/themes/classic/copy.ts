@@ -200,6 +200,15 @@ export const classicCopy = {
     'The operator may change or stop running this copy at any time. Keep your own copies of important documents.',
   'legal.t.privacy': 'How your information is handled is described in the Privacy page.',
 
+  // --- What's new ---
+  'updates.title': 'What’s new',
+  'updates.version': 'Version {version}',
+  'updates.newBadge': 'New',
+  'updates.dot': 'New updates',
+  'updates.kind.new': 'New',
+  'updates.kind.improved': 'Better',
+  'updates.kind.fixed': 'Fixed',
+
   // --- Modules ---
   'module.chores': 'Chores',
   'module.lists': 'Lists',

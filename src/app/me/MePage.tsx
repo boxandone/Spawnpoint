@@ -1,11 +1,23 @@
 import { Link } from 'react-router-dom';
-import { Avatar, Icon, Panel, SectionTitle, type IconName } from '@/components/ui';
+import { Avatar, Icon, Panel, SectionTitle, Tag, type IconName } from '@/components/ui';
 import { signOut } from '@/modules/households/api';
 import { useHousehold } from '@/modules/households/context';
 import { useIsOperator } from '@/modules/households/hooks';
 import { BadgeFrame, useCopy, usePack, type CopyKey } from '@/theme';
+import { APP_VERSION } from '../updates/releases';
+import { useUnseenUpdate } from '../updates/useUpdates';
 
-function MenuLink({ to, icon, label }: { to: string; icon: IconName; label: string }) {
+function MenuLink({
+  to,
+  icon,
+  label,
+  badge,
+}: {
+  to: string;
+  icon: IconName;
+  label: string;
+  badge?: string;
+}) {
   return (
     <li>
       <Link to={to} className="flex min-h-[56px] items-center gap-3 px-4">
@@ -13,6 +25,7 @@ function MenuLink({ to, icon, label }: { to: string; icon: IconName; label: stri
           <Icon name={icon} size={20} />
         </span>
         <span className="flex-1 font-bold">{label}</span>
+        {badge && <Tag tone="accent">{badge}</Tag>}
         <Icon name="chevron" size={18} className="text-ink-muted" />
       </Link>
     </li>
@@ -25,6 +38,7 @@ export function MePage() {
   const pack = usePack();
   const { member, household } = useHousehold();
   const operator = useIsOperator();
+  const { unseen } = useUnseenUpdate();
 
   const more: Array<{ to: string; icon: IconName; label: CopyKey }> = [
     { to: '/areas', icon: 'zone', label: 'areas.title' },
@@ -61,6 +75,12 @@ export function MePage() {
         {more.map((m) => (
           <MenuLink key={m.to} to={m.to} icon={m.icon} label={t(m.label)} />
         ))}
+        <MenuLink
+          to="/updates"
+          icon="sparkle"
+          label={t('updates.title')}
+          badge={unseen ? t('updates.newBadge') : undefined}
+        />
         <MenuLink to="/privacy" icon="shield" label={t('legal.privacyTitle')} />
         {operator.data && <MenuLink to="/operator" icon="shield" label={t('operator.title')} />}
       </ul>
@@ -73,6 +93,9 @@ export function MePage() {
         <Icon name="logout" size={18} />
         {t('auth.signOut')}
       </button>
+      <p className="mt-2 text-center font-num text-xs text-ink-muted">
+        {t('updates.version', { version: APP_VERSION })}
+      </p>
     </div>
   );
 }
