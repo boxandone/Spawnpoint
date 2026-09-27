@@ -179,7 +179,17 @@ set local role authenticated;
 set local request.jwt.claims = '{"sub": "10000000-0000-4000-8000-0000000000b1", "role": "authenticated"}';
 discard plans;
 select is((select count(*)::int from storage.objects), 1, 'B sees only its own file');
-delete from storage.objects where name like '20000000-0000-4000-8000-00000000000a/%';
+-- Supabase only allows deletes that come through the Storage API (which sets
+-- this flag); set it here so row level security is what gets tested. Either
+-- way, B's attempt must leave A's files alone.
+set local storage.allow_delete_query = 'true';
+do $$
+begin
+  delete from storage.objects where name like '20000000-0000-4000-8000-00000000000a/%';
+exception when others then
+  null;
+end;
+$$;
 reset role;
 select is((select count(*)::int from storage.objects where name like '20000000-0000-4000-8000-00000000000a/%'), 2,
   'B can''t delete A''s files');
