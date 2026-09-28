@@ -24,7 +24,7 @@ import {
   weekdayOf,
   yearOf,
   type IsoDate,
-} from '@/lib/dates';
+} from '../../lib/dates';
 
 export type Weekday = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 export type Nth = 1 | 2 | 3 | 4 | -1;

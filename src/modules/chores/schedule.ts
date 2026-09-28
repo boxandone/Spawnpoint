@@ -1,7 +1,10 @@
 import { z } from 'zod';
-import { monthName, ordinal, weekdayName } from '@/lib/dates';
-import type { Translate } from '@/theme';
+import { monthName, ordinal, weekdayName } from '../../lib/dates';
+import type { CopyKey, CopyVars } from '../../theme/copy';
 import type { Schedule } from './logic';
+
+/** Same shape as useCopy's translate; typed here so this file stays free of React. */
+type Translate = (key: CopyKey, vars?: CopyVars) => string;
 
 const weekday = z.number().int().min(0).max(6);
 
