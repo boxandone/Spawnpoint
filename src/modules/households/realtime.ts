@@ -19,7 +19,10 @@ type Table =
   | 'staples'
   | 'shopping_trips'
   | 'items'
-  | 'documents';
+  | 'documents'
+  | 'plans'
+  | 'plan_checklist_items'
+  | 'discussions';
 
 /** Subscribe to a household's changes. Realtime applies RLS, so only our rows arrive. */
 export function subscribeHousehold(
@@ -44,6 +47,9 @@ export function subscribeHousehold(
     'shopping_trips',
     'items',
     'documents',
+    'plans',
+    'plan_checklist_items',
+    'discussions',
   ];
   for (const table of scoped) {
     channel.on(
@@ -58,7 +64,13 @@ export function subscribeHousehold(
     () => onChange('households'),
   );
   // DELETE events can't be filtered and carry only the id (docs/DECISIONS.md #15).
-  for (const table of ['completions', 'list_items', 'staples', 'documents'] as const) {
+  for (const table of [
+    'completions',
+    'list_items',
+    'staples',
+    'documents',
+    'plan_checklist_items',
+  ] as const) {
     channel.on('postgres_changes', { event: 'DELETE', schema: 'public', table }, () =>
       onChange(table),
     );
@@ -103,6 +115,11 @@ export function useHouseholdRealtime(householdId: string, userId: string) {
           void qc.invalidateQueries({ queryKey: qk.documents(householdId) });
         if (table === 'locations')
           void qc.invalidateQueries({ queryKey: qk.shortCodes(householdId) });
+        if (table === 'plans') void qc.invalidateQueries({ queryKey: qk.plans(householdId) });
+        if (table === 'plan_checklist_items')
+          void qc.invalidateQueries({ queryKey: qk.checklist(householdId) });
+        if (table === 'discussions')
+          void qc.invalidateQueries({ queryKey: qk.discussions(householdId) });
         if (table === 'feed_events') void qc.invalidateQueries({ queryKey: qk.feed(householdId) });
         if (
           table === 'household_members' ||

@@ -25,7 +25,15 @@ function DocThumb({ doc, url }: { doc: Doc; url?: string }) {
 }
 
 /** Files for one item (or the household), opened through short-lived links. */
-export function DocumentList({ docs, itemId }: { docs: Doc[]; itemId: string | null }) {
+export function DocumentList({
+  docs,
+  itemId,
+  planId = null,
+}: {
+  docs: Doc[];
+  itemId: string | null;
+  planId?: string | null;
+}) {
   const t = useCopy();
   const { today } = useHousehold();
   const thumbs = useSignedUrls(docs.map((d) => d.thumb_path));
@@ -92,7 +100,13 @@ export function DocumentList({ docs, itemId }: { docs: Doc[]; itemId: string | n
       <Button variant="secondary" icon="plus" className="mt-3" onClick={() => setAdding(true)}>
         {t('docs.add')}
       </Button>
-      <UploadSheet open={adding} onClose={() => setAdding(false)} itemId={itemId} />
+      <UploadSheet
+        open={adding}
+        onClose={() => setAdding(false)}
+        itemId={itemId}
+        planId={planId}
+        initialKind={planId ? 'other' : 'receipt'}
+      />
     </>
   );
 }
@@ -102,11 +116,13 @@ export function UploadSheet({
   open,
   onClose,
   itemId,
+  planId = null,
   initialKind = 'receipt',
 }: {
   open: boolean;
   onClose: () => void;
   itemId: string | null;
+  planId?: string | null;
   initialKind?: DocKind;
 }) {
   const t = useCopy();
@@ -122,7 +138,7 @@ export function UploadSheet({
     if (!file) return;
     setBusy(true);
     try {
-      await upload({ itemId, kind, title: title || null, file });
+      await upload({ itemId, planId, kind, title: title || null, file });
       toast.show({ message: t('docs.uploaded'), tone: 'success' });
       setTitle('');
       onClose();

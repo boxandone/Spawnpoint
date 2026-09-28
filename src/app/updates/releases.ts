@@ -17,6 +17,33 @@ export interface Release {
 
 export const RELEASES: readonly Release[] = [
   {
+    version: '0.7.0',
+    date: '2026-09-28',
+    title: 'Plans, talk it over, and a calendar',
+    changes: [
+      {
+        kind: 'new',
+        text: 'Plans: trips, projects, decisions, and events, from someday to done. Each has dates, a checklist, notes, links, a budget, and files.',
+      },
+      {
+        kind: 'new',
+        text: 'See plans as a board by status, or a timeline with countdowns.',
+      },
+      {
+        kind: 'new',
+        text: 'Talk it over: flag a plan or to-do for your next sit-down, then note what you decided.',
+      },
+      {
+        kind: 'new',
+        text: 'Calendar: a month view and a coming-up list of plans, to-dos with due dates, and chores.',
+      },
+      {
+        kind: 'new',
+        text: 'Add your household’s calendar to Google Calendar or any calendar app with a private link you can turn off anytime.',
+      },
+    ],
+  },
+  {
     version: '0.6.0',
     date: '2026-09-27',
     title: 'Stuff: your home inventory',

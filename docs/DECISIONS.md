@@ -26,7 +26,7 @@ Short records of gaps or conflicts in the spec and the choice made. Newest at th
 20. **Scan floats over the tab screens only.** The Scan button floats above the tab bar on Today, Lists, Stuff, Plans, and Me, and hides on sub-pages so it never covers their own buttons (like Catch-up's submit). The five tabs keep the spec's order.
 21. **Freshness bars never turn red.** They use success, accent, and secondary colors. A low bar is a nudge, not a warning, in keeping with "never shame".
 22. **Removing a member uses a second tap, not undo.** Removal can't be undone from the client, so the button asks for a second tap instead of showing an undo toast. Everything else that can be reversed uses undo.
-23. **Lists, Stuff, Plans, and Scan tabs show "coming soon" until their phases.** Module toggles already hide their tabs.
+23. **Lists, Stuff, Plans, and Scan tabs show "coming soon" until their phases.** Module toggles already hide their tabs. (All four shipped by Phase 5; the placeholder is gone.)
 24. **The Me page keeps a reward placeholder.** It shows where levels, badges, and coins will go, with no numbers, until Phase 2. (Replaced by the rewards panel in Phase 2.)
 25. **Privacy and Terms pages shipped early.** Google won't publish a sign-in app without privacy and terms links, so public `/privacy` and `/terms` pages ship now (spec 4.1 plans the Privacy page for Phase 7). They name the operator for signed-in visitors and speak generically otherwise. Self-serve export and deletion remain Phase 7, and the page says so.
 26. **"What's new" notes live in code.** Release notes are a list in `src/app/updates/releases.ts`, versioned with `package.json` (a test keeps them in step), so shipping a change and its note happen in one commit. Notes are plain, theme-neutral text. Which notes a person has seen is remembered per device, shown as a dot on the Me tab.
@@ -61,3 +61,12 @@ Short records of gaps or conflicts in the spec and the choice made. Newest at th
 49. **Stuff can live in any place.** An item points at a zone, area, or spot, plus free text for the exact spot. Area pages list everything stored in the area and its spots, and members can add spots there.
 50. **Two new libraries.** `qrcode-generator` (MIT, no dependencies) draws QR codes as SVG, and `@zxing/browser` (MIT) reads codes where the browser can't. Both are small and not UI libraries.
 51. **Database tests clear cached plans after switching roles.** Plans cached while fixtures run as the superuser can skip permission checks, which once hid a real bug. Each test now runs `discard plans` after it becomes a client.
+
+## Phase 5
+
+52. **Plan XP is once per milestone.** The first time a plan reaches booked, and the first time it reaches done, the person who moved it earns 20 XP (under the daily cap). Moving it back and forth earns nothing more, and moving it back takes nothing away. Trip booked counts trips you booked; Plans finished counts plans you finished.
+53. **Talk-it-over decisions are a log.** Marking something discussed clears its flag and saves a `discussions` row (title snapshot, optional note, who, when), readable by the household and written only by `resolve_discussion`. It earns 5 XP. Undo works for 10 minutes and puts the item back in the queue.
+54. **Notes use a small, safe Markdown.** Headings, lists, bold, italic, code, and http(s) links, parsed into data and rendered by React, never as HTML.
+55. **One private calendar link per member.** The token is 32 random bytes shown once; only its SHA-256 hash is stored, so a lost link can't be recovered, only replaced. Making a new link or turning it off stops the old one at once. The feed function returns the same 404 for unknown, revoked, and malformed tokens.
+56. **The feed is all-day events.** Plans (with their date ranges and a tentative status), to-dos with due dates, and chores on set days. There are no times, so there's no timezone math to get wrong. Plans and to-dos cover two months back to a year ahead; chores cover a week back to two months ahead, and the feed includes high-priority chores unless you choose otherwise, because daily chores add up to hundreds of events. Floating chores ("every 10 days") move with each completion, so they're left out.
+57. **Files can belong to a plan**, stored at `{household_id}/plan-{plan_id}/…`, with the same quota and policies as other files.

@@ -22,7 +22,6 @@ import { ShopPage } from './rewards/ShopPage';
 import { InviteProblemRoute, NotFound } from './NotFound';
 import { NeedInvitePage } from './onboarding/NeedInvitePage';
 import { JoinInvitePage, StartInvitePage } from './onboarding/InvitePages';
-import { ComingSoon } from './placeholders/ComingSoon';
 
 /** Less-used screens load on demand to keep the first load small. */
 function Lazy({ load }: { load: () => Promise<{ default: ComponentType }> }) {
@@ -213,7 +212,60 @@ export const router = createBrowserRouter([
                   />
                 ),
               },
-              { path: '/plans', element: <ComingSoon title="plans.name" icon="plans" /> },
+              {
+                path: '/plans',
+                element: (
+                  <Lazy
+                    load={() => import('./plans/PlansPage').then((m) => ({ default: m.PlansPage }))}
+                  />
+                ),
+              },
+              {
+                path: '/plans/new',
+                element: (
+                  <Lazy
+                    load={() =>
+                      import('./plans/PlanEditorPage').then((m) => ({ default: m.PlanEditorPage }))
+                    }
+                  />
+                ),
+              },
+              {
+                path: '/plans/:id',
+                element: (
+                  <Lazy
+                    load={() => import('./plans/PlanPage').then((m) => ({ default: m.PlanPage }))}
+                  />
+                ),
+              },
+              {
+                path: '/plans/:id/edit',
+                element: (
+                  <Lazy
+                    load={() =>
+                      import('./plans/PlanEditorPage').then((m) => ({ default: m.PlanEditorPage }))
+                    }
+                  />
+                ),
+              },
+              {
+                path: '/talk',
+                element: (
+                  <Lazy
+                    load={() => import('./plans/TalkPage').then((m) => ({ default: m.TalkPage }))}
+                  />
+                ),
+              },
+              {
+                path: '/calendar',
+                element: (
+                  <Lazy
+                    load={() =>
+                      import('./calendar/CalendarPage').then((m) => ({ default: m.CalendarPage }))
+                    }
+                  />
+                ),
+              },
               {
                 path: '/scan',
                 element: (

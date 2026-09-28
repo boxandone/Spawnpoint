@@ -80,7 +80,7 @@ create table public.ics_tokens (
   household_id uuid not null references public.households (id) on delete cascade,
   member_id uuid not null unique,
   token_hash text not null unique,
-  chores text not null default 'fixed' check (chores in ('none', 'high', 'fixed')),
+  chores text not null default 'high' check (chores in ('none', 'high', 'fixed')),
   last_used_at timestamptz,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),

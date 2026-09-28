@@ -91,13 +91,22 @@ describe('buildEvents', () => {
     expect(new Set(chores.map((e) => e.uid)).size).toBe(chores.length);
   });
 
+  it('keeps chores inside their own window', () => {
+    const ev = buildEvents(src, from, to, 'high', { from: '2026-10-01', to: '2026-10-11' });
+    expect(ev.filter((e) => e.kind === 'chore').map((e) => e.start)).toEqual(['2026-10-06']);
+  });
+
   it('finds events on a day, including multi-day plans', () => {
     const ev = buildEvents(src, from, to, 'none');
     expect(eventsOn(ev, '2026-10-10').map((e) => e.uid)).toEqual(['plan-p1']);
   });
 
   it('the feed covers two months back and a year ahead', () => {
-    expect(feedWindow('2026-09-28')).toEqual({ from: '2026-07-30', to: '2027-09-28' });
+    expect(feedWindow('2026-09-28')).toEqual({
+      from: '2026-07-30',
+      to: '2027-09-28',
+      chores: { from: '2026-09-21', to: '2026-11-27' },
+    });
   });
 });
 

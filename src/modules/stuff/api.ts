@@ -91,6 +91,7 @@ export class UploadError extends Error {
 export async function uploadDocument(input: {
   householdId: string;
   itemId: string | null;
+  planId?: string | null;
   kind: DocKind;
   title: string | null;
   file: File;
@@ -99,13 +100,20 @@ export async function uploadDocument(input: {
   if (!prepared) throw new UploadError('type');
   if (prepared.blob.size > MAX_FILE_BYTES) throw new UploadError('too_big');
   const id = crypto.randomUUID();
-  const paths = documentPaths(input.householdId, input.itemId, id, prepared.mime, !!prepared.thumb);
+  const paths = documentPaths(
+    input.householdId,
+    { itemId: input.itemId, planId: input.planId },
+    id,
+    prepared.mime,
+    !!prepared.thumb,
+  );
   if (!paths) throw new UploadError('type');
 
   const row: TablesInsert<'documents'> = {
     id,
     household_id: input.householdId,
     item_id: input.itemId,
+    plan_id: input.planId ?? null,
     kind: input.kind,
     title: input.title?.trim() || null,
     storage_path: paths.path,

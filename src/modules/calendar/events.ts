@@ -58,6 +58,8 @@ export function buildEvents(
   from: IsoDate,
   to: IsoDate,
   chores: ChoresMode,
+  /** Chores can use a shorter window than plans (daily chores add up fast). */
+  choresWindow: { from: IsoDate; to: IsoDate } = { from, to },
 ): CalEvent[] {
   const out: CalEvent[] = [];
   for (const p of src.plans) {
@@ -98,7 +100,12 @@ export function buildEvents(
       );
       // Floating schedules move with each completion, so they have no fixed day to show.
       if (isFloating(s)) continue;
-      for (const occ of occurrencesBetween(s, from, to, task.start_on ?? from)) {
+      for (const occ of occurrencesBetween(
+        s,
+        choresWindow.from,
+        choresWindow.to,
+        task.start_on ?? choresWindow.from,
+      )) {
         out.push({
           uid: `chore-${task.id}-${occ.date}`,
           kind: 'chore',
@@ -124,7 +131,15 @@ export function eventsOn(events: readonly CalEvent[], day: IsoDate): CalEvent[] 
   return events.filter((e) => e.start <= day && e.end >= day);
 }
 
-/** The feed covers two months back and a year ahead. */
-export function feedWindow(today: IsoDate): { from: IsoDate; to: IsoDate } {
-  return { from: addDays(today, -60), to: addDays(today, 365) };
+/** The feed: plans and to-dos from two months back to a year ahead; chores for a week back to two months ahead. */
+export function feedWindow(today: IsoDate): {
+  from: IsoDate;
+  to: IsoDate;
+  chores: { from: IsoDate; to: IsoDate };
+} {
+  return {
+    from: addDays(today, -60),
+    to: addDays(today, 365),
+    chores: { from: addDays(today, -7), to: addDays(today, 60) },
+  };
 }

@@ -192,15 +192,18 @@ describe('paginateLabels', () => {
 
 describe('files', () => {
   it('builds paths the database accepts', () => {
-    expect(documentPaths('h', 'i', 'd', 'image/jpeg', true)).toEqual({
+    expect(documentPaths('h', { itemId: 'i' }, 'd', 'image/jpeg', true)).toEqual({
       path: 'h/i/d.jpg',
       thumb: 'h/i/d_thumb.jpg',
     });
-    expect(documentPaths('h', null, 'd', 'application/pdf', false)).toEqual({
+    expect(documentPaths('h', {}, 'd', 'application/pdf', false)).toEqual({
       path: 'h/household/d.pdf',
       thumb: null,
     });
-    expect(documentPaths('h', null, 'd', 'text/html', false)).toBeNull();
+    expect(documentPaths('h', {}, 'd', 'text/html', false)).toBeNull();
+    expect(documentPaths('h', { planId: 'p' }, 'd', 'application/pdf', false)?.path).toBe(
+      'h/plan-p/d.pdf',
+    );
     expect(extensionFor('image/heic')).toBe('heic');
   });
 

@@ -11,4 +11,5 @@ export { Sheet } from './Sheet';
 export { TabBar, type TabItem } from './TabBar';
 export { ToastProvider, useToast, UNDO_MS } from './Toast';
 export { Logo } from './Logo';
+export { Markdown } from './Markdown';
 export { Splash } from './Splash';

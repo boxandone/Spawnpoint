@@ -8,7 +8,10 @@ import { useCopy } from '@/theme';
 export function DocumentsPage() {
   const t = useCopy();
   const docs = useDocuments();
-  const household = useMemo(() => (docs.data ?? []).filter((d) => !d.item_id), [docs.data]);
+  const household = useMemo(
+    () => (docs.data ?? []).filter((d) => !d.item_id && !d.plan_id),
+    [docs.data],
+  );
   if (docs.isLoading) return <Splash />;
   return (
     <div className="pb-8">

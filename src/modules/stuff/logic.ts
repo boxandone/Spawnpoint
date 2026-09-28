@@ -226,17 +226,17 @@ export function extensionFor(mime: string): string | null {
   return EXT[mime] ?? null;
 }
 
-/** `{household}/{item|household}/{id}.{ext}`, matching the database check. */
+/** `{household}/{item | plan-{plan} | household}/{id}.{ext}`, matching the database check. */
 export function documentPaths(
   householdId: string,
-  itemId: string | null,
+  owner: { itemId?: string | null; planId?: string | null },
   documentId: string,
   mime: string,
   withThumb: boolean,
 ): { path: string; thumb: string | null } | null {
   const ext = extensionFor(mime);
   if (!ext) return null;
-  const folder = `${householdId}/${itemId ?? 'household'}`;
+  const folder = `${householdId}/${owner.itemId ?? (owner.planId ? `plan-${owner.planId}` : 'household')}`;
   return {
     path: `${folder}/${documentId}.${ext}`,
     thumb: withThumb ? `${folder}/${documentId}_thumb.jpg` : null,

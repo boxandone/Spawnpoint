@@ -232,3 +232,22 @@ insert into public.items (household_id, name, category, brand, model, purchased_
    'c1000000-0000-4000-8000-000000000012', 'TV stand', '{network}', null),
   ('b0000000-0000-4000-8000-000000000001', 'Spare house key', 'other', null, null, null, null, null, null,
    'c1000000-0000-4000-8000-000000000051', 'Small tin', '{keys}', null);
+
+------------------------------------------------------------------------------
+-- Plans (fictional)
+------------------------------------------------------------------------------
+
+insert into public.plans (id, household_id, title, type, status, starts_on, ends_on, tentative, icon, color, notes, budget, discuss) values
+  ('f1000000-0000-4000-8000-000000000001', 'b0000000-0000-4000-8000-000000000001', 'Beach weekend', 'trip', 'planning',
+   current_date + 24, current_date + 26, true, 'map', 'sky',
+   E'# Packing\n- Sunscreen\n- Towels\n\nCheck the **tide times** before we go: https://example.com/tides', 450, false),
+  ('f1000000-0000-4000-8000-000000000002', 'b0000000-0000-4000-8000-000000000001', 'Repaint the hallway', 'project', 'discussing',
+   null, null, false, 'wrench', 'mint', null, 120, true),
+  ('f1000000-0000-4000-8000-000000000003', 'b0000000-0000-4000-8000-000000000001', 'New couch?', 'decision', 'someday',
+   null, null, false, null, 'peach', null, null, false),
+  ('f1000000-0000-4000-8000-000000000004', 'b0000000-0000-4000-8000-000000000001', 'Game night', 'event', 'booked',
+   current_date + 5, null, false, 'star', 'lilac', null, null, false);
+
+insert into public.plan_checklist_items (household_id, plan_id, text, done, position) values
+  ('b0000000-0000-4000-8000-000000000001', 'f1000000-0000-4000-8000-000000000001', 'Book the cabin', true, 1),
+  ('b0000000-0000-4000-8000-000000000001', 'f1000000-0000-4000-8000-000000000001', 'Ask a neighbor to feed the dog', false, 2);

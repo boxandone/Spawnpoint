@@ -19,8 +19,9 @@ The full product spec is in [`docs/SPEC.md`](docs/SPEC.md). The theme packs are 
 | 2 | Rewards: levels, badges, deeds, coins, reward shop, weekly meter, feed, seasons, share card | Done |
 | 3 | Lists: groceries with store mode and staples, to buy, to-do, custom lists | Done |
 | 4 | Stuff: items, documents, QR labels, scanner, warranty watch | Done |
-| 5 | Plans: plans, the talk-it-over queue, calendar view, ICS feed | Next |
-| 6–7 | The other 19 themes, notifications and extras | Planned |
+| 5 | Plans: plans, the talk-it-over queue, calendar view, ICS feed | Done |
+| 6 | The other 19 theme packs | Next |
+| 7 | Notifications, digest, pantry, export and deletion, extras | Planned |
 
 ## Screenshots
 

@@ -53,6 +53,12 @@ export function MePage() {
 
   const more: Array<{ to: string; icon: IconName; label: CopyKey }> = [
     { to: '/feed', icon: 'feed', label: 'feed.title' },
+    ...(settings.modules.calendar
+      ? [{ to: '/calendar', icon: 'calendar' as const, label: 'calendar.title' as const }]
+      : []),
+    ...(settings.modules.plans
+      ? [{ to: '/talk', icon: 'chat' as const, label: 'talk.title' as const }]
+      : []),
     { to: '/areas', icon: 'zone', label: 'areas.title' },
     { to: '/upcoming', icon: 'calendar', label: 'upcoming.title' },
     { to: '/history', icon: 'history', label: 'history.title' },

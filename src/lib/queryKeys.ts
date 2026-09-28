@@ -26,4 +26,9 @@ export const qk = {
   documents: (hid: string) => ['documents', hid] as const,
   shortCodes: (hid: string) => ['shortCodes', hid] as const,
   signedUrls: (paths: readonly string[]) => ['signedUrls', ...paths] as const,
+  // Plans and calendar
+  plans: (hid: string) => ['plans', hid] as const,
+  checklist: (hid: string) => ['checklist', hid] as const,
+  discussions: (hid: string) => ['discussions', hid] as const,
+  icsToken: (mid: string) => ['icsToken', mid] as const,
 };

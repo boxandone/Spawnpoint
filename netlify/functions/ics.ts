@@ -38,8 +38,8 @@ export default async (req: Request): Promise<Response> => {
   if (!data) return notFound();
 
   const feed = data as unknown as CalendarSource & { today: string; chores: ChoresMode };
-  const { from, to } = feedWindow(feed.today);
-  const events = buildEvents(feed, from, to, feed.chores);
+  const window = feedWindow(feed.today);
+  const events = buildEvents(feed, window.from, window.to, feed.chores, window.chores);
   const site = process.env.URL ?? url.origin;
   const body = toIcs(events, {
     name: 'Spawnpoint',

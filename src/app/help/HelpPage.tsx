@@ -24,6 +24,8 @@ const FAQ = [
   'staples',
   'receipts',
   'labels',
+  'talk',
+  'calendarFeed',
   'theme',
   'invite',
   'install',
