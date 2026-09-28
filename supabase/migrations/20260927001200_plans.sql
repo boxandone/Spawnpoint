@@ -510,7 +510,7 @@ begin
       select jsonb_agg(jsonb_build_object('id', k.id, 'title', k.title, 'schedule', k.schedule,
         'priority', k.priority, 'start_on', k.start_on, 'location_id', k.location_id))
       from public.tasks k
-      where k.household_id = h.id and k.archived_at is null
+      where k.household_id = h.id and k.archived_at is null and k.if_missed <> 'if_needed'
         and (t.chores = 'fixed' or k.priority = 'high')
     ), '[]') end,
     'rotation', coalesce(s.zone_rotation, '{}'),

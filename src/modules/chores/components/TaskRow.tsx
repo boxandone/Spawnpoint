@@ -1,8 +1,7 @@
 import { useRef } from 'react';
-import { Avatar, Icon, IconButton, Tag } from '@/components/ui';
+import { Avatar, Icon, Tag } from '@/components/ui';
 import { cn } from '@/lib/cn';
 import { shortDay, type IsoDate } from '@/lib/dates';
-import { useLongPress } from '@/lib/useLongPress';
 import type { Member } from '@/modules/households/types';
 import { EffortIcon, useCopy } from '@/theme';
 import type { ChoreTask } from '../types';
@@ -10,6 +9,10 @@ import type { ChoreTask } from '../types';
 export interface TaskRowProps {
   task: ChoreTask;
   state: 'due' | 'waiting' | 'done';
+  /** An "as needed" check: a dashed circle, and no pressure. */
+  optional?: boolean;
+  /** Hide the room name when the list is already grouped by room. */
+  hideLocation?: boolean;
   today: IsoDate;
   waitingSince?: IsoDate;
   /** yearly_in windows show "This month" instead of a day. */
@@ -21,10 +24,12 @@ export interface TaskRowProps {
   onMore?: () => void;
 }
 
-/** One chore on Today. Tap the circle: done. Long-press or "…": more options. */
+/** One chore on Today. Tap the circle: done. Tap the rest: open it (log another day, skip, edit). */
 export function TaskRow({
   task,
   state,
+  optional,
+  hideLocation,
   today,
   waitingSince,
   windowed,
@@ -36,7 +41,6 @@ export function TaskRow({
 }: TaskRowProps) {
   const t = useCopy();
   const checkRef = useRef<HTMLButtonElement>(null);
-  const press = useLongPress(() => onMore?.());
   const interactive = !!onDone;
   const isDone = state === 'done';
 
@@ -58,7 +62,9 @@ export function TaskRow({
           'grid h-11 w-11 shrink-0 place-items-center rounded-full transition-colors',
           isDone
             ? 'bg-success text-on-success'
-            : 'text-primary shadow-[inset_0_0_0_2.5px_var(--primary)] hover:bg-primary/10 active:bg-primary/20',
+            : optional
+              ? 'border-[2.5px] border-dashed border-primary text-primary hover:bg-primary/10 active:bg-primary/20'
+              : 'text-primary shadow-[inset_0_0_0_2.5px_var(--primary)] hover:bg-primary/10 active:bg-primary/20',
         )}
       >
         <Icon
@@ -71,25 +77,24 @@ export function TaskRow({
         />
       </button>
 
-      <div
-        className="min-w-0 flex-1 select-none py-1"
-        {...(onMore
-          ? {
-              onPointerDown: press.onPointerDown,
-              onPointerMove: press.onPointerMove,
-              onPointerUp: press.onPointerUp,
-              onPointerCancel: press.onPointerCancel,
-              onPointerLeave: press.onPointerLeave,
-              onContextMenu: press.onContextMenu,
-            }
-          : {})}
+      <button
+        type="button"
+        disabled={!onMore}
+        aria-label={onMore ? t('task.open', { task: task.title }) : undefined}
+        className="min-w-0 flex-1 select-none py-1 text-left disabled:cursor-default"
+        onClick={onMore}
       >
-        <p className={cn('truncate font-bold leading-snug', isDone && 'line-through decoration-2')}>
+        <span
+          className={cn(
+            'block truncate font-bold leading-snug',
+            isDone && 'line-through decoration-2',
+          )}
+        >
           {task.title}
-        </p>
-        <div className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[13px] text-ink-muted">
+        </span>
+        <span className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[13px] text-ink-muted">
           <EffortIcon level={task.effort} />
-          {location && <span className="truncate">{location}</span>}
+          {location && !hideLocation && <span className="truncate">{location}</span>}
           {state === 'waiting' && waitingSince && (
             <Tag tone="accent">
               <Icon name="clock" size={12} strokeWidth={2.5} />
@@ -98,8 +103,8 @@ export function TaskRow({
           )}
           {state === 'due' && windowed && <Tag tone="secondary">{t('today.thisMonth')}</Tag>}
           {isDone && doneBy && <span>{doneBy.display_name}</span>}
-        </div>
-      </div>
+        </span>
+      </button>
 
       {assignee && !isDone && (
         <Avatar
@@ -107,14 +112,6 @@ export function TaskRow({
           color={assignee.color}
           name={t('task.assignedTo', { name: assignee.display_name })}
           size={28}
-        />
-      )}
-      {onMore && (
-        <IconButton
-          icon="more"
-          label={t('task.moreActions', { task: task.title })}
-          onClick={onMore}
-          className="text-ink-muted"
         />
       )}
     </li>

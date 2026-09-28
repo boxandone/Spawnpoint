@@ -40,16 +40,8 @@ export function AppShell() {
       <main id="main" className="mx-auto min-h-[100dvh] max-w-lg px-4 pb-tabbar">
         <Outlet />
       </main>
-      <TabBar
-        items={items}
-        // Scan floats over the tab screens only, so it never covers a sub-page's own buttons.
-        action={
-          items.some((i) => i.to === pathname)
-            ? { to: '/scan', label: t('nav.scan'), icon: 'scan' }
-            : undefined
-        }
-        label={t('nav.main')}
-      />
+      {/* Scan lives in the Today and Stuff headers, so nothing floats over content. */}
+      <TabBar items={items} label={t('nav.main')} />
     </>
   );
 }

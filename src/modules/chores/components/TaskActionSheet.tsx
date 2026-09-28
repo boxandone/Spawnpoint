@@ -5,6 +5,7 @@ import { mediumDate, type IsoDate } from '@/lib/dates';
 import type { Member } from '@/modules/households/types';
 import { useCopy } from '@/theme';
 import { backdateBounds, backdateChoices, validateDoneOn } from '../logic';
+import { describeSchedule } from '../schedule';
 import type { ChoreTask, LogInput } from '../types';
 
 interface Props {
@@ -16,7 +17,7 @@ interface Props {
   today: IsoDate;
 }
 
-/** Long-press menu: done on another day, by someone else, with a quantity, or skip. */
+/** A task, opened: its schedule and Edit up top, then log it (another day, someone else, a quantity) or skip. */
 export function TaskActionSheet({ task, onClose, onLog, members, me, today }: Props) {
   const t = useCopy();
   const dateId = useId();
@@ -25,6 +26,7 @@ export function TaskActionSheet({ task, onClose, onLog, members, me, today }: Pr
   const [doneBy, setDoneBy] = useState(me.id);
   const [quantity, setQuantity] = useState('');
   const [reason, setReason] = useState('');
+  const [skipping, setSkipping] = useState(false);
 
   useEffect(() => {
     if (!task) return;
@@ -33,6 +35,7 @@ export function TaskActionSheet({ task, onClose, onLog, members, me, today }: Pr
     setDoneBy(me.id);
     setQuantity('');
     setReason('');
+    setSkipping(false);
   }, [task, today, me.id]);
 
   if (!task) return null;
@@ -81,7 +84,22 @@ export function TaskActionSheet({ task, onClose, onLog, members, me, today }: Pr
         </Button>
       }
     >
-      <fieldset className="mt-2">
+      <div className="flex items-start gap-3 rounded-theme bg-surface-2 p-3">
+        <Icon name="calendar" size={20} className="mt-0.5 shrink-0 text-ink-muted" />
+        <div className="min-w-0 flex-1">
+          <p className="font-bold">{describeSchedule(task.schedule, t)}</p>
+          <p className="text-sm text-ink-muted">{t(`task.ifMissed.${task.if_missed}`)}</p>
+        </div>
+        <Link
+          to={`/tasks/${task.id}`}
+          className="sp-btn sp-btn-secondary inline-flex min-h-[40px] shrink-0 items-center gap-1.5 px-3 text-sm"
+        >
+          <Icon name="edit" size={16} />
+          {t('common.edit')}
+        </Link>
+      </div>
+
+      <fieldset className="mt-5">
         <legend className="mb-2 text-sm font-bold">{t('task.doneWhen')}</legend>
         <div className="flex flex-wrap gap-2">
           {choices.map((c) => (
@@ -161,33 +179,38 @@ export function TaskActionSheet({ task, onClose, onLog, members, me, today }: Pr
         />
       )}
 
-      <div className="mt-6 rounded-theme bg-surface-2 p-3">
-        <TextField
-          label={t('task.skipReason')}
-          hint={t('common.optional')}
-          placeholder={t('task.skipReasonPlaceholder')}
-          value={reason}
-          maxLength={280}
-          onChange={(e) => setReason(e.target.value)}
-        />
-        <Button
-          variant="secondary"
-          icon="skip"
-          block
-          className="mt-3"
-          onClick={() => submit('skipped')}
-          disabled={!dayValid}
-        >
-          {t('task.skipConfirm')}
-        </Button>
-      </div>
-
-      <Link
-        to={`/tasks/${task.id}`}
-        className="mt-4 inline-flex min-h-[44px] items-center px-1 font-bold underline underline-offset-2"
-      >
-        {t('common.edit')}
-      </Link>
+      {task.if_missed !== 'if_needed' &&
+        (skipping ? (
+          <div className="mt-6 rounded-theme bg-surface-2 p-3">
+            <TextField
+              label={t('task.skipReason')}
+              hint={t('common.optional')}
+              placeholder={t('task.skipReasonPlaceholder')}
+              value={reason}
+              maxLength={280}
+              onChange={(e) => setReason(e.target.value)}
+            />
+            <Button
+              variant="secondary"
+              icon="skip"
+              block
+              className="mt-3"
+              onClick={() => submit('skipped')}
+              disabled={!dayValid}
+            >
+              {t('task.skipConfirm')}
+            </Button>
+          </div>
+        ) : (
+          <button
+            type="button"
+            onClick={() => setSkipping(true)}
+            className="mt-5 inline-flex min-h-[44px] items-center gap-2 px-1 font-bold text-ink-muted underline underline-offset-2"
+          >
+            <Icon name="skip" size={18} />
+            {t('task.skipThisTime')}
+          </button>
+        ))}
     </Sheet>
   );
 }

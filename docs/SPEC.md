@@ -95,7 +95,7 @@ Each area page shows that area's chores with a freshness bar, and the stuff stor
 
 ### 4.3 Chores (the core module)
 
-**Task fields:** title, notes, `location_id`, effort (1–3), priority (`low`, `normal`, `high`), schedule, `if_missed` (`carry` or `let_go`), assignee (a member, or null for anyone), optional `deed_key` (see 4.9), optional quantity unit (for example "valves"), and `archived_at`.
+**Task fields:** title, notes, `location_id`, effort (1–3), priority (`low`, `normal`, `high`), schedule, `if_missed` (`carry`, `let_go`, or `if_needed`), assignee (a member, or null for anyone), optional `deed_key` (see 4.9), optional quantity unit (for example "valves"), and `archived_at`.
 
 **Schedule types**
 
@@ -112,6 +112,7 @@ Each area page shows that area's chores with a freshness bar, and the stuff stor
 1. **No stacking.** A task has at most one open occurrence. A new occurrence replaces an unfinished older one, so a weekly task missed twice still shows once.
 2. **Carry over** (`carry`): an unfinished occurrence stays on Today as "Waiting since {day}" until it's done, skipped, or replaced by the next occurrence.
 3. **Let go** (`let_go`): an occurrence quietly leaves Today when its day ends. It's recorded as missed, with no red badge and no penalty.
+   - **As needed** (`if_needed`): a check, like running the dishwasher. It shows in its own "If needed today" section. Doing it counts as done; leaving it records nothing (not skipped, not missed), and it doesn't count toward freshness or clean sweeps.
 4. **Skipped counts as handled.** For floating schedules, both done and skipped completions restart the clock.
 5. **Sort order for Today:** today's items first. Then carry-overs, ranked by lateness ratio (days late ÷ interval) times a priority weight. Show at most 3 carry-overs, and put the rest behind "Show more".
 
@@ -386,7 +387,7 @@ Format: task — schedule · if missed · effort (1–3) · deed key, where one 
 
 **Kitchen**
 - Wipe counters, stovetop, and sink — daily · let go · 1
-- Run dishwasher at night, empty in the morning — daily · carry · 1
+- Run dishwasher at night, empty in the morning — daily · as needed · 1
 - Toss old fridge leftovers — weekly · let go · 1
 - Mop kitchen floor — weekly · let go · 2
 - Wipe cabinet fronts, appliances, microwave — weekly · let go · 1

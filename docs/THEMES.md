@@ -38,6 +38,7 @@ Each theme lives in `src/theme/themes/<id>/`:
 | `celebrate.ts` | the task-complete, badge-earned, level-up, and meter-full animations. Every one has a reduced-motion version. |
 | `effort.tsx` | three icons for effort 1, 2, and 3 |
 | `badge-frame.tsx` | the frame drawn around the universal badge glyphs, with bronze, silver, and gold variants |
+| `hero.tsx` | decorative header art for Today and the tab headers (`today` and `tab` variants), drawn with tokens only, kept to one side and low contrast so headings stay readable |
 | `avatars/` | 12 original avatar SVGs in the theme's style |
 
 **Shared token names:** `--bg`, `--surface`, `--surface-2`, `--ink`, `--ink-muted`, `--line`, `--primary`, `--primary-ink`, `--secondary`, `--accent`, `--success`, `--warning`, `--danger`, `--radius`, `--panel-cut`, `--panel-border`, `--shadow-press`, `--font-display`, `--font-body`, `--font-num`.

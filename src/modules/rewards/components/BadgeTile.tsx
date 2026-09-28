@@ -8,11 +8,14 @@ export function BadgeTile({
   tier,
   size = 64,
   onClick,
+  compact,
 }: {
   info: BadgeInfo;
   tier: number;
   size?: number;
   onClick?: () => void;
+  /** Just the framed badge, no name underneath. */
+  compact?: boolean;
 }) {
   const t = useCopy();
   const frame = frameTier(tier, info.thresholds.length);
@@ -23,11 +26,13 @@ export function BadgeTile({
       <BadgeFrame tier={frame} size={size} label={label}>
         <Icon name={info.glyph} size={Math.round(size * 0.36)} strokeWidth={2.2} />
       </BadgeFrame>
-      <span
-        className={`line-clamp-2 text-center text-xs leading-tight ${tier > 0 ? 'font-bold' : 'text-ink-muted'}`}
-      >
-        {info.name}
-      </span>
+      {!compact && (
+        <span
+          className={`line-clamp-2 text-center text-xs leading-tight ${tier > 0 ? 'font-bold' : 'text-ink-muted'}`}
+        >
+          {info.name}
+        </span>
+      )}
     </>
   );
   return onClick ? (

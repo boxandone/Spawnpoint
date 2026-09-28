@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { getDeed } from '@/modules/rewards/deeds';
 import { AREA_TEMPLATES } from '@/modules/locations/logic';
-import { LIBRARY, LIBRARY_SECTIONS } from './library';
+import { LIBRARY, LIBRARY_SECTIONS, staggeredStarts } from './library';
 import { schedule as scheduleSchema } from './schedule';
 
 describe('starter library', () => {
@@ -54,5 +54,25 @@ describe('starter library', () => {
       expect(LIBRARY_SECTIONS).toContain(t.section);
       expect(areaKeys.has(t.area), t.key).toBe(true);
     }
+  });
+});
+
+describe('staggeredStarts', () => {
+  it('spreads long-interval tasks over the coming days and starts the rest today', () => {
+    const starts = staggeredStarts(
+      [
+        { key: 'a', schedule: { type: 'every_n_days', n: 45 } },
+        { key: 'b', schedule: { type: 'every_n_days', n: 45 } },
+        { key: 'c', schedule: { type: 'every_n_days', n: 2 } },
+        { key: 'd', schedule: { type: 'monthly_on', day: 1 } },
+        { key: 'e', schedule: { type: 'every_n_days', n: 14 } },
+      ],
+      '2026-09-28',
+    );
+    expect(starts.get('a')).toBe('2026-10-01');
+    expect(starts.get('b')).toBe('2026-10-06');
+    expect(starts.get('c')).toBe('2026-09-28');
+    expect(starts.get('d')).toBe('2026-09-28');
+    expect(starts.get('e')! <= '2026-10-11').toBe(true);
   });
 });

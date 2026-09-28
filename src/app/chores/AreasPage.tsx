@@ -15,6 +15,8 @@ import { describeSchedule } from '@/modules/chores/schedule';
 import { freshness, isStale, nextDue, tasksUnder } from '@/modules/chores/logic';
 import { listAreas, locationLabel } from '@/modules/locations/logic';
 import { EffortIcon, useCopy } from '@/theme';
+import { MEMBER_INK } from '@/theme/memberColors';
+import { roomColor, roomIcon } from '@/modules/locations/rooms';
 import { Tip } from '../help/Tip';
 import { PlaceStuff } from '../stuff/PlaceStuff';
 import { useHousehold } from '@/modules/households/context';
@@ -61,8 +63,17 @@ export function AreasPage() {
               return (
                 <li key={area.id}>
                   <Link to={`/areas/${area.id}`} className="sp-panel block p-4">
-                    <div className="mb-2 flex items-center justify-between gap-2">
-                      <span className="font-display text-lg">{area.name}</span>
+                    <div className="mb-2 flex items-center justify-between gap-3">
+                      <span
+                        className="grid h-10 w-10 shrink-0 place-items-center rounded-theme-sm"
+                        style={{ background: roomColor(area.id), color: MEMBER_INK }}
+                        aria-hidden
+                      >
+                        <Icon name={roomIcon(area)} size={22} />
+                      </span>
+                      <span className="min-w-0 flex-1 truncate font-display text-lg">
+                        {area.name}
+                      </span>
                       <Icon name="chevron" size={18} className="text-ink-muted" />
                     </div>
                     {f.total > 0 ? (
@@ -99,7 +110,7 @@ export function AreaDetailPage() {
 
   return (
     <div className="pb-8">
-      <PageHeader title={area.name} back="/areas" />
+      <PageHeader title={area.name} subtitle={t('areas.title')} back="/areas" />
       <Panel>
         <FreshnessBar ratio={f.ratio} label={t('areas.freshness')} />
       </Panel>

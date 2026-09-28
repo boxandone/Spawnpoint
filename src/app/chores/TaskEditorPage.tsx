@@ -59,6 +59,7 @@ export function TaskEditorPage() {
         assignee_id: existing.assignee_id,
         deed_key: existing.deed_key,
         unit: existing.unit,
+        start_on: existing.start_on,
       });
     }
   }, [existing]);
@@ -132,25 +133,43 @@ export function TaskEditorPage() {
         <p className="mt-2 px-0.5 text-sm text-ink-muted">{describeSchedule(form.schedule, t)}</p>
       </div>
 
-      {isNew && (
-        <TextField
-          label={t('task.startOn')}
-          type="date"
-          value={form.start_on ?? today}
-          onChange={(e) => set('start_on', e.target.value || today)}
-        />
-      )}
+      <TextField
+        label={isNew ? t('task.startOn') : t('task.notBefore')}
+        hint={isNew ? t('task.startOnHint') : t('task.notBeforeHint')}
+        type="date"
+        value={form.start_on ?? today}
+        onChange={(e) => set('start_on', e.target.value || today)}
+      />
 
       <Tip id="editor.ifMissed" text="tip.editor.ifMissed" />
-      <Segmented<IfMissed>
-        label={t('task.ifMissed')}
-        value={form.if_missed}
-        onChange={(v) => set('if_missed', v)}
-        options={[
-          { value: 'carry', label: t('task.ifMissed.carry') },
-          { value: 'let_go', label: t('task.ifMissed.let_go') },
-        ]}
-      />
+      <fieldset>
+        <legend className="mb-1.5 px-0.5 text-sm font-bold">{t('task.ifMissed')}</legend>
+        <div className="flex flex-col gap-2">
+          {(['carry', 'let_go', 'if_needed'] as const).map((v: IfMissed) => (
+            <label
+              key={v}
+              className={`flex min-h-[56px] cursor-pointer items-start gap-3 rounded-theme p-3 ${
+                form.if_missed === v
+                  ? 'bg-primary/10 shadow-[inset_0_0_0_2px_var(--primary)]'
+                  : 'bg-surface shadow-[inset_0_0_0_2px_var(--line)]'
+              }`}
+            >
+              <input
+                type="radio"
+                name="if_missed"
+                value={v}
+                checked={form.if_missed === v}
+                onChange={() => set('if_missed', v)}
+                className="mt-1 h-5 w-5 accent-[var(--primary)]"
+              />
+              <span>
+                <span className="block font-bold">{t(`task.ifMissed.${v}`)}</span>
+                <span className="block text-sm text-ink-muted">{t(`task.ifMissed.${v}.hint`)}</span>
+              </span>
+            </label>
+          ))}
+        </div>
+      </fieldset>
 
       <fieldset>
         <legend className="mb-1.5 px-0.5 text-sm font-bold">{t('task.effort')}</legend>

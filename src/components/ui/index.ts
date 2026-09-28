@@ -7,6 +7,7 @@ export { Icon, type IconName } from './Icon';
 export { PageHeader } from './PageHeader';
 export { Panel, SectionTitle } from './Panel';
 export { ProgressMeter } from './ProgressMeter';
+export { ProgressRing } from './ProgressRing';
 export { Sheet } from './Sheet';
 export { TabBar, type TabItem } from './TabBar';
 export { ToastProvider, useToast, UNDO_MS } from './Toast';

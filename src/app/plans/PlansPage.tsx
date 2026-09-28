@@ -65,6 +65,7 @@ export function PlansPage() {
   return (
     <div className="pb-24">
       <PageHeader
+        hero
         title={t('plans.name')}
         action={
           <Button size="sm" icon="plus" onClick={() => navigate('/plans/new')}>

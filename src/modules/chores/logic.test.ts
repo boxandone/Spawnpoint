@@ -512,3 +512,39 @@ describe('household timezone', () => {
     expect(nextOccurrenceAfter(w.schedule, '2026-11-01', w.start_on)?.date).toBe('2026-11-08');
   });
 });
+
+describe('"as needed" tasks', () => {
+  const today = '2026-09-28';
+
+  it('show in their own list, never as due or waiting', () => {
+    const dishes = task({ if_missed: 'if_needed' });
+    const view = buildToday([dishes], [], today);
+    expect(view.ifNeeded.map((i) => i.task.id)).toEqual([dishes.id]);
+    expect(view.due).toEqual([]);
+    expect(view.waiting).toEqual([]);
+  });
+
+  it('leaving one alone records nothing and it comes back fresh the next day', () => {
+    const dishes = task({ if_missed: 'if_needed' });
+    expect(taskStatus(dishes, [], today).kind).toBe('due');
+    expect(taskStatus(dishes, [done(dishes, '2026-09-26')], today).kind).toBe('due');
+    expect(buildToday([dishes], [], today).waitingMore).toEqual([]);
+  });
+
+  it('doing one counts as done for the day', () => {
+    const dishes = task({ if_missed: 'if_needed' });
+    const view = buildToday([dishes], [done(dishes, today)], today);
+    expect(view.ifNeeded).toEqual([]);
+    expect(view.doneToday.map((t) => t.id)).toEqual([dishes.id]);
+  });
+
+  it("don't count against freshness or show in upcoming", () => {
+    const dishes = task({ if_missed: 'if_needed', start_on: '2026-09-01' });
+    const chore = task({ schedule: weekly(1) });
+    expect(freshness([dishes, chore], [done(chore, today)], today)).toMatchObject({
+      total: 1,
+      fresh: 1,
+    });
+    expect(upcoming([dishes], [], today).every((d) => d.tasks.length === 0)).toBe(true);
+  });
+});

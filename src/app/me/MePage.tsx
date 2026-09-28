@@ -1,9 +1,10 @@
 import { Link } from 'react-router-dom';
-import { Avatar, Icon, IconButton, SectionTitle, Tag, type IconName } from '@/components/ui';
+import { Avatar, Icon, IconButton, Tag, type IconName } from '@/components/ui';
 import { signOut } from '@/modules/households/api';
 import { useHousehold } from '@/modules/households/context';
 import { useIsOperator, useUpdateProfile } from '@/modules/households/hooks';
-import { useCopy, type CopyKey, type ModePreference } from '@/theme';
+import { HeroArt, useCopy, type CopyKey, type ModePreference } from '@/theme';
+import { MEMBER_COLORS, MEMBER_INK } from '@/theme/memberColors';
 import { RewardsPanel } from '../rewards/RewardsPanel';
 import { APP_VERSION } from '../updates/releases';
 import { useUnseenUpdate } from '../updates/useUpdates';
@@ -51,8 +52,8 @@ export function MePage() {
     dark: 'moon',
   };
 
-  const more: Array<{ to: string; icon: IconName; label: CopyKey }> = [
-    { to: '/feed', icon: 'feed', label: 'feed.title' },
+  // Big, colorful tiles for the places people go most; settings stay in a short list.
+  const tiles: Array<{ to: string; icon: IconName; label: CopyKey }> = [
     ...(settings.modules.calendar
       ? [{ to: '/calendar', icon: 'calendar' as const, label: 'calendar.title' as const }]
       : []),
@@ -60,44 +61,75 @@ export function MePage() {
       ? [{ to: '/talk', icon: 'chat' as const, label: 'talk.title' as const }]
       : []),
     { to: '/areas', icon: 'zone', label: 'areas.title' },
-    { to: '/upcoming', icon: 'calendar', label: 'upcoming.title' },
+    { to: '/upcoming', icon: 'clock', label: 'upcoming.title' },
     { to: '/history', icon: 'history', label: 'history.title' },
-    { to: '/settings/personal', icon: 'palette', label: 'me.personal' },
-    { to: '/settings/household', icon: 'home', label: 'me.household' },
+    ...(settings.modules.rewards
+      ? [{ to: '/feed', icon: 'feed' as const, label: 'feed.title' as const }]
+      : []),
   ];
 
   return (
-    <div>
-      <header className="flex flex-col items-center pb-2 pt-[calc(1.5rem+env(safe-area-inset-top))] text-center">
-        <IconButton
-          icon={modeIcon[member.mode]}
-          label={t('me.modeToggle', { mode: t(`settings.mode.${member.mode}` as CopyKey) })}
-          onClick={() => updateProfile.mutate({ mode: nextMode[member.mode] })}
-          className="self-end bg-surface shadow-card"
+    <div className="pb-6">
+      <header className="sp-panel relative -mx-1 mt-[calc(0.75rem+env(safe-area-inset-top))] overflow-hidden p-4">
+        <HeroArt
+          variant="tab"
+          className="pointer-events-none absolute inset-y-0 right-0 h-full w-[65%]"
         />
-        <Avatar avatar={member.avatar} color={member.color} name={member.display_name} size={96} />
-        <h1 className="mt-3 text-3xl">{member.display_name}</h1>
-        <p className="text-ink-muted">
-          {t('household.name')} · {household.name}
-        </p>
+        <div className="relative flex items-center gap-3">
+          <Avatar
+            avatar={member.avatar}
+            color={member.color}
+            name={member.display_name}
+            size={72}
+          />
+          <div className="min-w-0 flex-1">
+            <h1 className="truncate text-2xl leading-tight">{member.display_name}</h1>
+            <p className="truncate text-sm text-ink-muted">{household.name}</p>
+          </div>
+          <IconButton
+            icon={modeIcon[member.mode]}
+            label={t('me.modeToggle', { mode: t(`settings.mode.${member.mode}` as CopyKey) })}
+            onClick={() => updateProfile.mutate({ mode: nextMode[member.mode] })}
+            className="self-start bg-surface shadow-card"
+          />
+        </div>
       </header>
 
       {settings.modules.rewards && <RewardsPanel />}
 
-      <SectionTitle>{t('me.more')}</SectionTitle>
-      <ul className="sp-panel divide-y divide-line">
-        {more.map((m) => (
-          <MenuLink key={m.to} to={m.to} icon={m.icon} label={t(m.label)} />
+      <ul className="mt-5 grid grid-cols-3 gap-2">
+        {tiles.map((tile, i) => (
+          <li key={tile.to}>
+            <Link
+              to={tile.to}
+              className="sp-panel flex aspect-square flex-col items-center justify-center gap-2 p-2 text-center"
+            >
+              <span
+                className="grid h-11 w-11 place-items-center rounded-theme-sm"
+                style={{
+                  background: MEMBER_COLORS[i % MEMBER_COLORS.length]!.hex,
+                  color: MEMBER_INK,
+                }}
+                aria-hidden
+              >
+                <Icon name={tile.icon} size={22} />
+              </span>
+              <span className="text-[13px] font-bold leading-tight">{t(tile.label)}</span>
+            </Link>
+          </li>
         ))}
+      </ul>
+
+      <ul className="sp-panel mt-5 divide-y divide-line">
+        <MenuLink to="/settings/personal" icon="palette" label={t('me.personal')} />
+        <MenuLink to="/settings/household" icon="home" label={t('me.household')} />
         <MenuLink to="/help" icon="sparkle" label={t('help.menu')} />
         <MenuLink
           to="/updates"
-          icon="sparkle"
+          icon="star"
           label={t('updates.title')}
           badge={unseen ? t('updates.newBadge') : undefined}
         />
-        <MenuLink to="/privacy" icon="shield" label={t('legal.privacyTitle')} />
-        {operator.data && <MenuLink to="/operator" icon="shield" label={t('operator.title')} />}
       </ul>
 
       <button
@@ -108,8 +140,23 @@ export function MePage() {
         <Icon name="logout" size={18} />
         {t('auth.signOut')}
       </button>
-      <p className="mt-2 text-center font-num text-xs text-ink-muted">
-        {t('updates.version', { version: APP_VERSION })}
+      <p className="mt-2 flex flex-wrap items-center justify-center gap-x-3 text-center text-xs text-ink-muted">
+        <span className="font-num">{t('updates.version', { version: APP_VERSION })}</span>
+        <Link
+          to="/privacy"
+          className="inline-flex min-h-[44px] items-center underline underline-offset-2"
+        >
+          {t('legal.privacyTitle')}
+        </Link>
+        {/* Only the person running this copy sees this (their email is in OPERATOR_EMAILS). */}
+        {operator.data && (
+          <Link
+            to="/operator"
+            className="inline-flex min-h-[44px] items-center underline underline-offset-2"
+          >
+            {t('operator.title')}
+          </Link>
+        )}
       </p>
     </div>
   );

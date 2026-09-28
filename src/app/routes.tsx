@@ -96,6 +96,16 @@ export const router = createBrowserRouter([
               { path: '/me', element: <MePage /> },
               { path: '/updates', element: <UpdatesPage /> },
               { path: '/me/badges', element: <BadgesPage /> },
+              {
+                path: '/me/season',
+                element: (
+                  <Lazy
+                    load={() =>
+                      import('./rewards/SeasonPage').then((m) => ({ default: m.SeasonPage }))
+                    }
+                  />
+                ),
+              },
               { path: '/me/shop', element: <ShopPage /> },
               { path: '/feed', element: <FeedPage /> },
               {

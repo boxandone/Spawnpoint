@@ -37,7 +37,8 @@ export type Schedule =
   | { type: 'monthly_on'; nth: Nth; weekday: Weekday }
   | { type: 'yearly_in'; months: number[] };
 
-export type IfMissed = 'carry' | 'let_go';
+/** carry: stays until done. let_go: quietly moves on. if_needed: a check, done only if needed. */
+export type IfMissed = 'carry' | 'let_go' | 'if_needed';
 export type Priority = 'low' | 'normal' | 'high';
 export type CompletionKind = 'done' | 'skipped';
 
@@ -317,6 +318,8 @@ export interface TodayView<T extends TaskLike = TaskLike> {
   waiting: TodayItem<T>[];
   /** The rest, behind "Show more". */
   waitingMore: TodayItem<T>[];
+  /** "As needed" checks for today: do them if they need doing, or leave them. */
+  ifNeeded: TodayItem<T>[];
   /** Tasks with a completion dated today (shown as done). */
   doneToday: T[];
 }
@@ -339,6 +342,7 @@ export function buildToday<T extends TaskLike>(
 ): TodayView<T> {
   const due: TodayItem<T>[] = [];
   const waiting: TodayItem<T>[] = [];
+  const ifNeeded: TodayItem<T>[] = [];
   const doneIds = new Set(completions.filter((c) => c.done_on === today).map((c) => c.task_id));
   const doneToday: T[] = [];
 
@@ -346,7 +350,9 @@ export function buildToday<T extends TaskLike>(
     if (task.archived_at) continue;
     if (doneIds.has(task.id)) doneToday.push(task);
     const status = taskStatus(task, completions, today, ctx);
-    if (status.kind === 'due') {
+    if (status.kind === 'due' && task.if_missed === 'if_needed') {
+      ifNeeded.push({ task, status, score: PRIORITY_WEIGHT[task.priority] });
+    } else if (status.kind === 'due') {
       due.push({ task, status, score: PRIORITY_WEIGHT[task.priority] });
     } else if (status.kind === 'waiting') {
       waiting.push({
@@ -370,8 +376,10 @@ export function buildToday<T extends TaskLike>(
       byTitle(a.task, b.task),
   );
   doneToday.sort(byTitle);
+  ifNeeded.sort((a, b) => byTitle(a.task, b.task));
 
   return {
+    ifNeeded,
     due,
     waiting: waiting.slice(0, carryLimit),
     waitingMore: waiting.slice(carryLimit),
@@ -498,7 +506,7 @@ export function upcoming<T extends TaskLike>(
   const byDate = new Map(out.map((d) => [d.date, d]));
 
   for (const task of tasks) {
-    if (task.archived_at) continue;
+    if (task.archived_at || task.if_missed === 'if_needed') continue;
     const s = effectiveSchedule(task, ctx);
     if (isFloating(s)) {
       const status = floatingStatus(task, s, completions, today);
@@ -562,7 +570,8 @@ export function freshness(
   today: IsoDate,
   ctx: ScheduleContext = {},
 ): Freshness {
-  const live = tasks.filter((t) => !t.archived_at);
+  // "As needed" checks aren't required, so they never make an area look stale.
+  const live = tasks.filter((t) => !t.archived_at && t.if_missed !== 'if_needed');
   const fresh = live.filter((t) => !isStale(t, completions, today, ctx)).length;
   return { fresh, total: live.length, ratio: live.length === 0 ? 1 : fresh / live.length };
 }

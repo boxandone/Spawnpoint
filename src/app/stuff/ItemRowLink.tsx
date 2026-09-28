@@ -2,6 +2,8 @@ import { Link } from 'react-router-dom';
 import { Icon, Tag, type IconName } from '@/components/ui';
 import type { Item } from '@/modules/stuff/api';
 import { useCopy, type CopyKey } from '@/theme';
+import { MEMBER_INK } from '@/theme/memberColors';
+import { roomColor } from '@/modules/locations/rooms';
 
 export const CATEGORY_ICONS: Record<string, IconName> = {
   electronics: 'bolt',
@@ -41,7 +43,10 @@ export function ItemRowLink({
             className="h-12 w-12 shrink-0 rounded-theme-sm bg-surface-2 object-cover"
           />
         ) : (
-          <span className="grid h-12 w-12 shrink-0 place-items-center rounded-theme-sm bg-surface-2">
+          <span
+            className="grid h-12 w-12 shrink-0 place-items-center rounded-theme-sm"
+            style={{ background: roomColor(item.location_id), color: MEMBER_INK }}
+          >
             <Icon name={CATEGORY_ICONS[item.category] ?? 'stuff'} size={22} />
           </span>
         )}

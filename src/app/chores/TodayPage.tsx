@@ -1,9 +1,9 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { EmptyState, Splash } from '@/components/ui';
 import { hourIn } from '@/lib/dates';
 import { TaskActionSheet } from '@/modules/chores/components/TaskActionSheet';
-import { TodayView } from '@/modules/chores/components/TodayView';
+import { TodayView, type TodayRoom } from '@/modules/chores/components/TodayView';
 import { useChores, useLogCompletions } from '@/modules/chores/hooks';
 import { buildToday, catchUp, rotationFor } from '@/modules/chores/logic';
 import { LogFixSheet } from '@/modules/rewards/components/LogFixSheet';
@@ -11,6 +11,7 @@ import { useLogDeed, useWeekXp } from '@/modules/rewards/hooks';
 import type { ChoreTask } from '@/modules/chores/types';
 import { useHousehold } from '@/modules/households/context';
 import { locationLabel } from '@/modules/locations/logic';
+import { roomColor, roomIcon } from '@/modules/locations/rooms';
 import { useCelebrate, useCopy } from '@/theme';
 import { TipQueue } from '../help/Tip';
 
@@ -70,6 +71,16 @@ export function TodayPage() {
         .filter((n): n is string => !!n),
     [settings.zone_rotation, today, locations],
   );
+  // Group by area: a task in a spot belongs to the spot's area.
+  const roomOf = useCallback(
+    (task: ChoreTask): TodayRoom | null => {
+      let loc = locations.find((l) => l.id === task.location_id);
+      if (loc?.kind === 'spot') loc = locations.find((l) => l.id === loc?.parent_id);
+      if (!loc || loc.kind === 'zone') return null;
+      return { id: loc.id, name: loc.name, icon: roomIcon(loc), color: roomColor(loc.id) };
+    },
+    [locations],
+  );
   const doneByFor = (taskId: string) => {
     const c = completions.find((x) => x.task_id === taskId && x.done_on === today);
     return memberById(c?.done_by);
@@ -89,6 +100,7 @@ export function TodayPage() {
         zoneNames={zoneNames}
         catchUpCount={catchUpCount}
         locationName={(id) => locationLabel(id, locations)}
+        roomOf={roomOf}
         memberById={memberById}
         doneByFor={doneByFor}
         filter={filter}
@@ -100,17 +112,13 @@ export function TodayPage() {
         }
         onMore={setMenuTask}
         onAdd={() => navigate('/tasks/new')}
+        onScan={settings.modules.stuff ? () => navigate('/scan') : undefined}
         onLogFix={rewardsOn ? () => setFixOpen(true) : undefined}
         onCatchUp={() => navigate('/catch-up')}
         onUpcoming={() => navigate('/upcoming')}
         tips={
           view.due.length + view.waiting.length > 0 ? (
-            <TipQueue
-              tips={[
-                { id: 'today.longpress', text: 'tip.today.longpress' },
-                { id: 'today.undo', text: 'tip.today.undo' },
-              ]}
-            />
+            <TipQueue tips={[{ id: 'today.tap', text: 'tip.today.tap' }]} />
           ) : undefined
         }
       />

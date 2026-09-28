@@ -5,6 +5,7 @@ import {
   Chip,
   EmptyState,
   Icon,
+  IconButton,
   PageHeader,
   Panel,
   SectionTitle,
@@ -66,11 +67,20 @@ export function StuffPage() {
   return (
     <div className="pb-24">
       <PageHeader
+        hero
         title={t('stuff.name')}
         action={
-          <Button size="sm" icon="plus" onClick={() => navigate('/stuff/new')}>
-            {t('stuff.add')}
-          </Button>
+          <div className="flex items-center gap-2">
+            <IconButton
+              icon="scan"
+              label={t('nav.scan')}
+              onClick={() => navigate('/scan')}
+              className="bg-surface shadow-card"
+            />
+            <Button size="sm" icon="plus" onClick={() => navigate('/stuff/new')}>
+              {t('stuff.add')}
+            </Button>
+          </div>
         }
       />
       <div className="sticky top-0 z-10 -mx-4 bg-bg px-4 pb-2 pt-1">

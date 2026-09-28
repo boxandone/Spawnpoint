@@ -8,6 +8,7 @@
 import type { AreaKey } from '@/modules/locations/logic';
 import type { DeedKey } from '@/modules/rewards/deeds';
 import type { IfMissed, Schedule } from './logic';
+import { addDays, type IsoDate } from '../../lib/dates';
 
 export type LibrarySection =
   | 'kitchen'
@@ -61,7 +62,7 @@ export const LIBRARY: readonly LibraryTemplate[] = [
     area: 'kitchen',
     title: 'Run dishwasher at night, empty in the morning',
     schedule: daily,
-    ifMissed: 'carry',
+    ifMissed: 'if_needed',
     effort: 1,
     recommended: true,
   },
@@ -579,4 +580,28 @@ export const LIBRARY_SECTIONS: LibrarySection[] = [
 
 export function getTemplate(key: string): LibraryTemplate | undefined {
   return LIBRARY.find((t) => t.key === key);
+}
+
+/**
+ * First due dates for new tasks from the library. Tasks that repeat every two
+ * weeks or more are spread over the coming days instead of all landing on
+ * setup day; everything else starts today (fixed schedules have their own days).
+ */
+export function staggeredStarts(
+  templates: ReadonlyArray<Pick<LibraryTemplate, 'key' | 'schedule'>>,
+  today: IsoDate,
+): Map<string, IsoDate> {
+  const out = new Map<string, IsoDate>();
+  let i = 0;
+  for (const tpl of templates) {
+    const s = tpl.schedule;
+    if (s.type === 'every_n_days' && s.n >= 14) {
+      const offset = Math.min(s.n - 1, 3 + ((i * 5) % Math.min(s.n, 30)));
+      out.set(tpl.key, addDays(today, offset));
+      i += 1;
+    } else {
+      out.set(tpl.key, today);
+    }
+  }
+  return out;
 }

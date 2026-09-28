@@ -47,6 +47,7 @@ export interface CalendarSource {
     priority: string;
     start_on: string | null;
     location_id: string | null;
+    if_missed?: string;
     archived_at?: string | null;
   }>;
   rotation?: ZoneRotation;
@@ -93,7 +94,8 @@ export function buildEvents(
       (src.locations ?? []).map((l) => ({ ...l, kind: 'area' as const, name: '', sort: 0 })),
     );
     for (const task of src.tasks) {
-      if (task.archived_at || (chores === 'high' && task.priority !== 'high')) continue;
+      if (task.archived_at || task.if_missed === 'if_needed') continue;
+      if (chores === 'high' && task.priority !== 'high') continue;
       const s = effectiveSchedule(
         { schedule: parseSchedule(task.schedule), location_id: task.location_id },
         { rotation: src.rotation, ancestry },

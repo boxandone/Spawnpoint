@@ -19,4 +19,4 @@ export {
 } from './ThemeProvider';
 export { useCopy, type Translate } from './useCopy';
 export type * from './types';
-export { EffortIcon, BadgeFrame } from './Effort';
+export { EffortIcon, BadgeFrame, HeroArt } from './Effort';

@@ -93,7 +93,7 @@ insert into public.tasks (id, household_id, title, location_id, effort, priority
    'c1000000-0000-4000-8000-000000000011', 1, 'normal', '{"type": "daily"}', 'let_go', null, null, null,
    current_date - 30, 'kitchen.wipe-counters', now() - interval '30 days', 'a0000000-0000-4000-8000-000000000002'),
   ('e1000000-0000-4000-8000-000000000002', 'b0000000-0000-4000-8000-000000000001', 'Run dishwasher at night, empty in the morning',
-   'c1000000-0000-4000-8000-000000000011', 1, 'normal', '{"type": "daily"}', 'carry', null, null, null,
+   'c1000000-0000-4000-8000-000000000011', 1, 'normal', '{"type": "daily"}', 'if_needed', null, null, null,
    current_date - 30, 'kitchen.dishwasher', now() - interval '30 days', 'a0000000-0000-4000-8000-000000000002'),
   ('e1000000-0000-4000-8000-000000000003', 'b0000000-0000-4000-8000-000000000001', 'Mop kitchen floor',
    'c1000000-0000-4000-8000-000000000011', 2, 'normal', '{"type": "weekly_on", "days": [6]}', 'let_go', null, null, null,

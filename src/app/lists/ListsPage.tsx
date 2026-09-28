@@ -9,6 +9,14 @@ import { useListItems, useLists, useListTitle } from '@/modules/lists/hooks';
 import { useCopy } from '@/theme';
 import { IconPicker } from './ListPage';
 import { listIcon } from './listMeta';
+import { MEMBER_INK, memberColor } from '@/theme/memberColors';
+
+const LIST_TINT: Record<string, string> = {
+  groceries: 'mint',
+  to_buy: 'peach',
+  todo: 'sky',
+  custom: 'lilac',
+};
 
 /** The Lists tab: Groceries, To buy, To-do, and the household's own lists. */
 export function ListsPage() {
@@ -45,6 +53,7 @@ export function ListsPage() {
   return (
     <div className="pb-24">
       <PageHeader
+        hero
         title={t('lists.name')}
         action={
           <Button size="sm" icon="plus" onClick={() => setOpen(true)}>
@@ -65,7 +74,13 @@ export function ListsPage() {
                 to={`/lists/${list.id}`}
                 className="sp-panel flex min-h-[64px] items-center gap-3 p-3"
               >
-                <span className="grid h-11 w-11 shrink-0 place-items-center rounded-theme-sm bg-surface-2">
+                <span
+                  className="grid h-11 w-11 shrink-0 place-items-center rounded-theme-sm"
+                  style={{
+                    background: memberColor(LIST_TINT[list.kind] ?? list.icon ?? 'sand'),
+                    color: MEMBER_INK,
+                  }}
+                >
                   <Icon name={listIcon(list)} size={22} />
                 </span>
                 <span className="min-w-0 flex-1">

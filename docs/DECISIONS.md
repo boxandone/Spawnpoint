@@ -70,3 +70,13 @@ Short records of gaps or conflicts in the spec and the choice made. Newest at th
 55. **One private calendar link per member.** The token is 32 random bytes shown once; only its SHA-256 hash is stored, so a lost link can't be recovered, only replaced. Making a new link or turning it off stops the old one at once. The feed function returns the same 404 for unknown, revoked, and malformed tokens.
 56. **The feed is all-day events.** Plans (with their date ranges and a tentative status), to-dos with due dates, and chores on set days. There are no times, so there's no timezone math to get wrong. Plans and to-dos cover two months back to a year ahead; chores cover a week back to two months ahead, and the feed includes high-priority chores unless you choose otherwise, because daily chores add up to hundreds of events. Floating chores ("every 10 days") move with each completion, so they're left out.
 57. **Files can belong to a plan**, stored at `{household_id}/plan-{plan_id}/…`, with the same quota and policies as other files.
+
+## Home screen and polish
+
+58. **"As needed" is a third if-missed choice** (`if_needed`), for checks like running the dishwasher. It shows in its own "If needed today" section. Doing it counts as done (XP as usual); leaving it records nothing. It's never carried, never "waiting", doesn't count toward freshness or clean sweeps, and isn't on the calendar. The migration converts the starter dishwasher task.
+59. **Starter chores aren't pre-picked.** Setup starts with nothing selected and offers "Add the suggested ones". Chores that repeat every 14 days or more get staggered first due dates (3 to 30 days out) so they don't all land on day one. Any task's first due date ("Not before" once it exists) can be edited.
+60. **Tapping a task opens it.** The sheet leads with the schedule and Edit; skipping is one tap further down. Long-press and the "•••" button are gone.
+61. **Today is a home screen.** A header with what's left, the weekly goal as a ring, one row of quick actions, then today's tasks grouped by room, carry-overs, as-needed checks, and a collapsed "Done today". Only one tip shows at a time.
+62. **Rooms have a look.** Each place gets an icon from its name (or stored icon) and a stable color from the soft member palette, so dark ink always reads on it. Lists, Plans, and Me tiles use the same palette.
+63. **Packs draw their own header art** (`Hero`), in tokens only and kept to the side at low contrast so headings stay readable. Tab roots show it in their header band.
+64. **Scan moved into headers** (Today and Stuff) instead of floating over content (replaces #20). The Operator link is in the Me footer, visible only to operators.

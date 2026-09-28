@@ -77,5 +77,16 @@ export interface ThemePack extends ThemeMeta {
   celebrate: CelebrationSet;
   Effort: ComponentType<EffortIconProps>;
   BadgeFrame: ComponentType<BadgeFrameProps>;
+  /**
+   * Decorative header art drawn for this pack, in its own colors (tokens only).
+   * It sits behind headings, so it stays low contrast and off to the side.
+   */
+  Hero: ComponentType<HeroArtProps>;
   avatars: AvatarDef[];
+}
+
+export interface HeroArtProps {
+  /** "today" is the big home header; "tab" is the slimmer band on other tabs. */
+  variant: 'today' | 'tab';
+  className?: string;
 }

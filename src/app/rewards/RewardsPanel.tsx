@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Icon, Panel, ProgressMeter, SectionTitle, useToast } from '@/components/ui';
+import { Button, Icon, ProgressMeter, ProgressRing, useToast } from '@/components/ui';
 import { useHousehold } from '@/modules/households/context';
 import { ALL_BADGES } from '@/modules/rewards/badges';
 import { BadgeTile } from '@/modules/rewards/components/BadgeTile';
@@ -63,114 +63,101 @@ export function RewardsPanel() {
   }
 
   return (
-    <>
-      <Panel className="mt-4 flex flex-col gap-3">
-        <div className="flex items-baseline justify-between gap-2">
-          <p className="font-display text-2xl">
-            {t('level.label', { level: r.level, title: levelTitle(pack.levelTitles, r.level) })}
-          </p>
-          <p className="font-num text-sm text-ink-muted">
-            {t('rewards.totalXp', { xp: r.xp_total.toLocaleString() })}
-          </p>
-        </div>
-        <ProgressMeter
-          label={t('level.label', { level: r.level, title: levelTitle(pack.levelTitles, r.level) })}
-          showLabel={false}
+    <section className="sp-panel mt-4 flex flex-col gap-4 p-4" aria-label={t('rewards.title')}>
+      <div className="flex items-center gap-4">
+        <ProgressRing
           value={into}
           max={span}
+          size={84}
+          stroke={9}
+          label={levelLine}
           valueText={t('rewards.progress', { into, span, next: r.level + 1 })}
-          size="lg"
-        />
-        <p className="text-sm text-ink-muted">
-          {t('rewards.progress', { into, span, next: r.level + 1 })}
-        </p>
-        <div className="grid grid-cols-2 gap-3">
-          <Link to="/me/shop" className="flex items-center gap-2 rounded-theme bg-surface-2 p-3">
-            <Icon name="coin" size={22} />
-            <span className="min-w-0">
-              <span className="block font-num text-lg font-bold">{r.coins.toLocaleString()}</span>
-              <span className="block truncate text-xs text-ink-muted">
-                {t('coins.name')} · {t('shop.name')}
-              </span>
+        >
+          <span className="leading-none">
+            <span className="block text-[10px] font-bold uppercase text-ink-muted">
+              {t('rewards.lv')}
             </span>
-          </Link>
-          <div className="flex items-center gap-2 rounded-theme bg-surface-2 p-3">
-            <Icon name="calendar" size={22} />
-            <span className="min-w-0">
-              <span className="block font-num text-lg font-bold">{r.active_weeks}</span>
-              <span className="block truncate text-xs text-ink-muted">{t('streak.name')}</span>
+            <span className="font-num text-2xl font-bold">{r.level}</span>
+          </span>
+        </ProgressRing>
+        <div className="min-w-0 flex-1">
+          <p className="truncate font-display text-xl leading-tight">
+            {levelTitle(pack.levelTitles, r.level)}
+          </p>
+          <p className="text-sm text-ink-muted">
+            {t('rewards.toNext', { count: span - into, next: r.level + 1 })}
+          </p>
+          <div className="mt-2 flex flex-wrap gap-2">
+            <Link
+              to="/me/shop"
+              className="inline-flex min-h-[36px] items-center gap-1.5 rounded-full bg-accent px-3 text-sm font-bold text-on-accent"
+            >
+              <Icon name="coin" size={16} />
+              {r.coins.toLocaleString()} {t('coins.name')}
+            </Link>
+            <span className="inline-flex min-h-[36px] items-center gap-1.5 rounded-full bg-surface-2 px-3 text-sm font-bold">
+              <Icon name="calendar" size={16} />
+              {t('rewards.weeksShort', { count: r.active_weeks })}
             </span>
           </div>
         </div>
-        <p className="text-sm text-ink-muted">
-          {r.current_run > 0 ? t('rewards.run', { count: r.current_run }) : t('rewards.runNone')}
-        </p>
-        <p className="text-xs text-ink-muted">
-          {t('rewards.private', { coinsName: t('coins.name') })}
-        </p>
-        <Button variant="secondary" onClick={() => void shareCard()} disabled={sharing}>
-          {t('rewards.shareCard')}
-        </Button>
-      </Panel>
+      </div>
 
-      <SectionTitle
-        action={
-          <Link to="/me/badges" className="text-sm font-bold underline underline-offset-2">
-            {t('rewards.seeAll')}
-          </Link>
-        }
-      >
-        {t('badge.plural')} · {earned.length}
-      </SectionTitle>
-      <Panel>
-        {earned.length === 0 ? (
-          <p className="text-sm text-ink-muted">{t('badges.none')}</p>
-        ) : (
-          <div className="grid grid-cols-4 gap-2">
-            {earned.slice(0, 4).map((b) => {
-              const info = ALL_BADGES.find((x) => x.key === b.badge_key);
-              return info ? (
-                <BadgeTile key={b.badge_key} info={info} tier={b.tier} size={56} />
-              ) : null;
-            })}
-          </div>
-        )}
-      </Panel>
+      <Link to="/me/badges" className="flex items-center gap-3 rounded-theme bg-surface-2 p-3">
+        <span className="min-w-0 flex-1">
+          <span className="block font-bold">
+            {t('badge.plural')} · {earned.length}
+          </span>
+          {earned.length === 0 && (
+            <span className="block text-sm text-ink-muted">{t('badges.none')}</span>
+          )}
+        </span>
+        <span className="flex -space-x-2">
+          {earned.slice(0, 3).map((b) => {
+            const info = ALL_BADGES.find((x) => x.key === b.badge_key);
+            return info ? (
+              <span key={b.badge_key} className="pointer-events-none">
+                <BadgeTile info={info} tier={b.tier} size={40} compact />
+              </span>
+            ) : null;
+          })}
+        </span>
+        <Icon name="chevron" size={18} className="text-ink-muted" />
+      </Link>
 
-      <SectionTitle>
-        {t('season.title', { season: t(`season.${quarter}` as CopyKey) })}
-      </SectionTitle>
-      <Panel className="flex flex-col gap-3">
+      <Link to="/me/season" className="flex flex-col gap-2 rounded-theme bg-surface-2 p-3">
+        <span className="flex items-center gap-2">
+          <span className="min-w-0 flex-1 font-bold">
+            {t('season.title', { season: t(`season.${quarter}` as CopyKey) })}
+          </span>
+          <span className="font-num text-sm text-ink-muted">{r.season.done}/10</span>
+          <Icon name="chevron" size={18} className="text-ink-muted" />
+        </span>
         <ProgressMeter
           label={t('season.title', { season: t(`season.${quarter}` as CopyKey) })}
+          showLabel={false}
           value={r.season.done}
           max={10}
           valueText={t('season.body', { done: r.season.done })}
           tone={r.season.done >= 5 ? 'success' : 'secondary'}
         />
-        <ul className="flex flex-col gap-2">
-          {r.season.goals.map((g) => {
-            const done = g.progress >= g.target;
-            return (
-              <li key={g.key} className="flex items-center gap-2 text-sm">
-                <span
-                  className={`grid h-6 w-6 shrink-0 place-items-center rounded-full ${done ? 'bg-success text-on-success' : 'shadow-[inset_0_0_0_2px_var(--line)]'}`}
-                  aria-hidden
-                >
-                  {done && <Icon name="check" size={14} strokeWidth={3} />}
-                </span>
-                <span className={`flex-1 ${done ? 'font-bold' : ''}`}>
-                  {t(`goal.${g.key}` as CopyKey)}
-                </span>
-                <span className="font-num text-ink-muted">
-                  {Math.min(Math.floor(g.progress), g.target).toLocaleString()}/
-                  {g.target.toLocaleString()}
-                </span>
-              </li>
-            );
-          })}
-        </ul>
-      </Panel>
-    </>
+      </Link>
+
+      <div className="flex items-center justify-between gap-2">
+        <p className="text-xs text-ink-muted">
+          {t('rewards.private', { coinsName: t('coins.name') })}
+        </p>
+        <Button
+          size="sm"
+          variant="ghost"
+          icon="gift"
+          className="shrink-0 whitespace-nowrap"
+          onClick={() => void shareCard()}
+          disabled={sharing}
+        >
+          {t('rewards.shareCard')}
+        </Button>
+      </div>
+    </section>
   );
 }

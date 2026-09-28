@@ -17,6 +17,41 @@ export interface Release {
 
 export const RELEASES: readonly Release[] = [
   {
+    version: '0.8.0',
+    date: '2026-09-28',
+    title: 'A calmer, more colorful home screen',
+    changes: [
+      {
+        kind: 'improved',
+        text: 'Today is now a home screen: how many things are left, the weekly goal as a ring, and tasks grouped by room.',
+      },
+      {
+        kind: 'new',
+        text: '“Only if it’s needed” tasks, like running the dishwasher: do them if they need doing, and leaving them doesn’t count as missed.',
+      },
+      {
+        kind: 'improved',
+        text: 'Tap a task to open it: see its schedule, edit it, log it for another day or someone else, or skip it.',
+      },
+      {
+        kind: 'improved',
+        text: 'Set when a task is first due, so new chores don’t all land on the same day. Starter chores that repeat every few weeks are spread out.',
+      },
+      {
+        kind: 'improved',
+        text: 'Setup no longer picks starter chores for you. Add the suggested ones with one tap, or pick your own.',
+      },
+      {
+        kind: 'improved',
+        text: 'A shorter Me page with big shortcuts, and season goals on their own page.',
+      },
+      {
+        kind: 'improved',
+        text: 'Rooms and lists have their own colors and icons, and every tab has a themed header. Scan moved into the Today and Stuff headers.',
+      },
+    ],
+  },
+  {
     version: '0.7.0',
     date: '2026-09-28',
     title: 'Plans, talk it over, and a calendar',

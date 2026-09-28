@@ -17,7 +17,12 @@ import {
 import { todayIn } from '@/lib/dates';
 import { qk } from '@/lib/queryKeys';
 import { createTasks, newId } from '@/modules/chores/api';
-import { LIBRARY, LIBRARY_SECTIONS, type LibraryTemplate } from '@/modules/chores/library';
+import {
+  LIBRARY,
+  LIBRARY_SECTIONS,
+  staggeredStarts,
+  type LibraryTemplate,
+} from '@/modules/chores/library';
 import { describeSchedule } from '@/modules/chores/schedule';
 import { createHousehold, createMemberInvite, updateSettings } from '@/modules/households/api';
 import { useMembershipQuery, usePublicConfig } from '@/modules/households/hooks';
@@ -92,9 +97,8 @@ export function SetupWizard() {
   const [areas, setAreas] = useState<AreaChoice[]>(() => areasFor('house'));
   const [newArea, setNewArea] = useState('');
   const [modules, setModules] = useState<Modules>(DEFAULT_MODULES);
-  const [picked, setPicked] = useState<Set<string>>(
-    () => new Set(LIBRARY.filter((x) => x.recommended).map((x) => x.key)),
-  );
+  // Nothing is picked for you: suggestions are one tap away.
+  const [picked, setPicked] = useState<Set<string>>(() => new Set());
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [householdId, setHouseholdId] = useState<string | null>(null);
@@ -182,6 +186,7 @@ export function SetupWizard() {
       await createLocations(areaRows);
 
       const chosen = available.filter((tpl) => picked.has(tpl.key));
+      const starts = staggeredStarts(chosen, today);
       await createTasks(
         hid,
         chosen.map((tpl: LibraryTemplate) => {
@@ -198,6 +203,7 @@ export function SetupWizard() {
             deed_key: tpl.deedKey ?? null,
             unit: tpl.unit ?? null,
             library_key: tpl.key,
+            start_on: starts.get(tpl.key) ?? today,
           };
         }),
       );
@@ -389,6 +395,25 @@ export function SetupWizard() {
             {t('setup.tasksBody')}{' '}
             {t('setup.tasksCount', { count: available.filter((x) => picked.has(x.key)).length })}
           </p>
+          <div className="flex flex-wrap gap-2">
+            <Button
+              variant="secondary"
+              icon="sparkle"
+              onClick={() =>
+                setPicked(
+                  (s) =>
+                    new Set([...s, ...available.filter((x) => x.recommended).map((x) => x.key)]),
+                )
+              }
+            >
+              {t('setup.tasksSuggested', { count: available.filter((x) => x.recommended).length })}
+            </Button>
+            {picked.size > 0 && (
+              <Button variant="ghost" onClick={() => setPicked(new Set())}>
+                {t('setup.tasksClear')}
+              </Button>
+            )}
+          </div>
           {LIBRARY_SECTIONS.map((section) => {
             const list = available.filter((x) => x.section === section);
             if (list.length === 0) return null;
