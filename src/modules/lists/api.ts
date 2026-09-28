@@ -92,6 +92,7 @@ export function toInsert(item: ListItem): NewListItem {
     notes: item.notes,
     checked: item.checked,
     checked_at: item.checked_at,
+    item_id: item.item_id,
     position: item.position,
   };
 }

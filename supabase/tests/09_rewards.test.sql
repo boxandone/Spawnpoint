@@ -121,6 +121,7 @@ select is((select tier from public.badge_progress where member_id = '30000000-00
 -- Privacy -----------------------------------------------------------------------
 set local role authenticated;
 set local request.jwt.claims = '{"sub": "10000000-0000-4000-8000-0000000000a1", "role": "authenticated"}';
+discard plans;
 select is((select count(*)::int from public.xp_events where member_id <> '30000000-0000-4000-8000-0000000000a1'), 0, 'a member cannot see a housemate''s XP');
 select is((select count(*)::int from public.member_stats), 1, 'or their level and coins');
 select is((select count(*)::int from public.badge_progress where member_id <> '30000000-0000-4000-8000-0000000000a1'), 0, 'or their badge progress');
@@ -151,6 +152,7 @@ select is((select coins_spent from public.member_stats), 0, 'and the coins come 
 reset role;
 set local role authenticated;
 set local request.jwt.claims = '{"sub": "10000000-0000-4000-8000-0000000000a2", "role": "authenticated"}';
+discard plans;
 select is((select count(*)::int from public.rewards), 0, 'a housemate cannot see your reward shop');
 select is((public.my_rewards() ->> 'level')::int, public.level_for_xp((select xp_total from public.member_stats)), 'my_rewards reports your own level');
 
@@ -158,6 +160,7 @@ select is((public.my_rewards() ->> 'level')::int, public.level_for_xp((select xp
 reset role;
 set local role authenticated;
 set local request.jwt.claims = '{"sub": "10000000-0000-4000-8000-0000000000b1", "role": "authenticated"}';
+discard plans;
 select is(
   (select count(*)::int from public.feed_events where household_id <> '20000000-0000-4000-8000-00000000000b')
   + (select count(*)::int from public.deed_logs where household_id <> '20000000-0000-4000-8000-00000000000b'),

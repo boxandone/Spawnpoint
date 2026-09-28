@@ -41,12 +41,14 @@ select plan(14);
 -- A signed-in user with no household can still ask for help.
 set local role authenticated;
 set local request.jwt.claims = '{"sub": "10000000-0000-4000-8000-0000000000c1", "role": "authenticated"}';
+discard plans;
 select lives_ok($$insert into public.feedback (kind, message) values ('question', 'How do I get an invite?')$$, 'a user without a household can send a question');
 
 -- A member of household A reports a bug.
 reset role;
 set local role authenticated;
 set local request.jwt.claims = '{"sub": "10000000-0000-4000-8000-0000000000a1", "role": "authenticated"}';
+discard plans;
 select lives_ok($$insert into public.feedback (kind, message, page, app_version) values ('bug', 'The undo button hid behind my thumb', '/', '0.3.0')$$, 'a member can report a bug');
 select is((select household_id from public.feedback where user_id = auth.uid()), '20000000-0000-4000-8000-00000000000a'::uuid, 'the household is filled in by the database');
 select is((select count(*)::int from public.feedback), 1, 'a sender sees only their own feedback');
@@ -60,12 +62,14 @@ select throws_ok($$insert into public.feedback (kind, message) values ('rant', '
 reset role;
 set local role authenticated;
 set local request.jwt.claims = '{"sub": "10000000-0000-4000-8000-0000000000a2", "role": "authenticated"}';
+discard plans;
 select is((select count(*)::int from public.feedback), 0, 'housemates cannot read each other''s feedback');
 
 -- The operator reads everything and resolves it with a note.
 reset role;
 set local role authenticated;
 set local request.jwt.claims = '{"sub": "10000000-0000-4000-8000-0000000000e1", "role": "authenticated"}';
+discard plans;
 select is((select count(*)::int from public.feedback), 2, 'the operator sees all feedback');
 select lives_ok($$select public.set_feedback_status((select id from public.feedback where kind = 'bug'), 'done', 'Fixed in the next update')$$, 'the operator can mark feedback done');
 
@@ -73,11 +77,13 @@ select lives_ok($$select public.set_feedback_status((select id from public.feedb
 reset role;
 set local role authenticated;
 set local request.jwt.claims = '{"sub": "10000000-0000-4000-8000-0000000000a1", "role": "authenticated"}';
+discard plans;
 select is((select operator_note from public.feedback), 'Fixed in the next update', 'the sender sees the operator''s note');
 reset role;
 insert into public.feedback (user_id, kind, message) select '10000000-0000-4000-8000-0000000000a1', 'idea', 'Idea number ' || g from generate_series(1, 19) g;
 set local role authenticated;
 set local request.jwt.claims = '{"sub": "10000000-0000-4000-8000-0000000000a1", "role": "authenticated"}';
+discard plans;
 select throws_ok($$insert into public.feedback (kind, message) values ('idea', 'One too many')$$, '54000', null, 'at most 20 messages a day per person');
 
 select * from finish();

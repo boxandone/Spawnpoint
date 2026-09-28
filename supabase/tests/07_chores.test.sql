@@ -40,6 +40,7 @@ select plan(14);
 
 set local role authenticated;
 set local request.jwt.claims = '{"sub": "10000000-0000-4000-8000-0000000000a1", "role": "authenticated"}';
+discard plans;
 
 select throws_ok(
   $$insert into public.completions (household_id, task_id, done_on, done_by, logged_by) values ('20000000-0000-4000-8000-00000000000a', '50000000-0000-4000-8000-00000000000a', public.household_today('20000000-0000-4000-8000-00000000000a') + 1, '30000000-0000-4000-8000-0000000000a1', '30000000-0000-4000-8000-0000000000a1')$$,

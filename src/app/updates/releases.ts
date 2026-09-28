@@ -17,6 +17,41 @@ export interface Release {
 
 export const RELEASES: readonly Release[] = [
   {
+    version: '0.6.0',
+    date: '2026-09-27',
+    title: 'Stuff: your home inventory',
+    changes: [
+      {
+        kind: 'new',
+        text: 'Stuff: keep track of what you own and where it lives, down to the shelf. “Where is…” finds anything by name, tag, brand, or place.',
+      },
+      {
+        kind: 'new',
+        text: 'Add photos, receipts, manuals, and warranties to any item, or to Household papers. Photos are shrunk on your phone, and files stay private to your household.',
+      },
+      {
+        kind: 'new',
+        text: 'Warranties ending in the next 60 days show at the top of Stuff.',
+      },
+      {
+        kind: 'new',
+        text: 'QR labels: print a sheet for bins, shelves, and things. Scanning one opens what’s inside, for your household only.',
+      },
+      {
+        kind: 'new',
+        text: 'The Scan button reads our labels and product barcodes.',
+      },
+      {
+        kind: 'new',
+        text: 'Bought something on your To buy list? Add it to Stuff in one tap, with the details filled in.',
+      },
+      {
+        kind: 'improved',
+        text: 'Area pages show what’s stored there, and you can add spots like “Cabinet 2”.',
+      },
+    ],
+  },
+  {
     version: '0.5.0',
     date: '2026-09-27',
     title: 'Lists: groceries, to buy, and to-do',

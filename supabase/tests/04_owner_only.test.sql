@@ -41,6 +41,7 @@ select plan(22);
 -- As a plain member of A
 set local role authenticated;
 set local request.jwt.claims = '{"sub": "10000000-0000-4000-8000-0000000000a2", "role": "authenticated"}';
+discard plans;
 
 select throws_ok($$select public.create_member_invite('20000000-0000-4000-8000-00000000000a')$$, '42501', null, 'member cannot create invites');
 select throws_ok($$select public.revoke_invite('70000000-0000-4000-8000-00000000000a')$$, '42501', null, 'member cannot revoke invites');
@@ -59,6 +60,7 @@ select throws_ok($$update public.household_members set role = 'owner' where id =
 reset role;
 set local role authenticated;
 set local request.jwt.claims = '{"sub": "10000000-0000-4000-8000-0000000000a1", "role": "authenticated"}';
+discard plans;
 
 select is(length(public.create_member_invite('20000000-0000-4000-8000-00000000000a') ->> 'code'), 12, 'owner creates a 12-character invite code');
 select is((select count(*)::int from public.invites), 2, 'owner sees the household''s invites');
@@ -73,6 +75,7 @@ select lives_ok($$select public.remove_member('30000000-0000-4000-8000-000000000
 reset role;
 set local role authenticated;
 set local request.jwt.claims = '{"sub": "10000000-0000-4000-8000-0000000000a2", "role": "authenticated"}';
+discard plans;
 select is((select count(*)::int from public.tasks), 0, 'removed member sees no tasks');
 select is((select count(*)::int from public.households), 0, 'removed member sees no household');
 

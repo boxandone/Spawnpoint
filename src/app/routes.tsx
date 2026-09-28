@@ -139,9 +139,89 @@ export const router = createBrowserRouter([
                   />
                 ),
               },
-              { path: '/stuff', element: <ComingSoon title="stuff.name" icon="stuff" /> },
+              {
+                path: '/stuff',
+                element: (
+                  <Lazy
+                    load={() => import('./stuff/StuffPage').then((m) => ({ default: m.StuffPage }))}
+                  />
+                ),
+              },
+              {
+                path: '/stuff/new',
+                element: (
+                  <Lazy
+                    load={() =>
+                      import('./stuff/ItemEditorPage').then((m) => ({ default: m.ItemEditorPage }))
+                    }
+                  />
+                ),
+              },
+              {
+                path: '/stuff/docs',
+                element: (
+                  <Lazy
+                    load={() =>
+                      import('./stuff/DocumentsPage').then((m) => ({ default: m.DocumentsPage }))
+                    }
+                  />
+                ),
+              },
+              {
+                path: '/stuff/labels',
+                element: (
+                  <Lazy
+                    load={() =>
+                      import('./stuff/LabelsPage').then((m) => ({ default: m.LabelsPage }))
+                    }
+                  />
+                ),
+              },
+              {
+                path: '/stuff/:id',
+                element: (
+                  <Lazy
+                    load={() => import('./stuff/ItemPage').then((m) => ({ default: m.ItemPage }))}
+                  />
+                ),
+              },
+              {
+                path: '/stuff/:id/edit',
+                element: (
+                  <Lazy
+                    load={() =>
+                      import('./stuff/ItemEditorPage').then((m) => ({ default: m.ItemEditorPage }))
+                    }
+                  />
+                ),
+              },
+              {
+                path: '/places/:id',
+                element: (
+                  <Lazy
+                    load={() => import('./stuff/PlacePage').then((m) => ({ default: m.PlacePage }))}
+                  />
+                ),
+              },
+              {
+                path: '/s/:code',
+                element: (
+                  <Lazy
+                    load={() =>
+                      import('./stuff/ShortCodePage').then((m) => ({ default: m.ShortCodePage }))
+                    }
+                  />
+                ),
+              },
               { path: '/plans', element: <ComingSoon title="plans.name" icon="plans" /> },
-              { path: '/scan', element: <ComingSoon title="nav.scan" icon="scan" /> },
+              {
+                path: '/scan',
+                element: (
+                  <Lazy
+                    load={() => import('./stuff/ScanPage').then((m) => ({ default: m.ScanPage }))}
+                  />
+                ),
+              },
             ],
           },
         ],

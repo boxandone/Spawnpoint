@@ -230,3 +230,39 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* Label sheets: on paper, only the full-size copy in .sp-print-portal prints. */
+.sp-label-sheet {
+  width: 8.5in;
+  height: 11in;
+  background: white;
+  color: black;
+  overflow: hidden;
+}
+
+.sp-print-portal {
+  display: none;
+}
+
+@media print {
+  @page {
+    size: letter;
+    margin: 0;
+  }
+  html,
+  body {
+    background: white !important;
+  }
+  body > *:not(.sp-print-portal) {
+    display: none !important;
+  }
+  .sp-print-portal {
+    display: block;
+  }
+  .sp-print-portal .sp-label-sheet {
+    break-after: page;
+  }
+  .sp-print-portal .sp-label-sheet:last-child {
+    break-after: auto;
+  }
+}

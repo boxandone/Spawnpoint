@@ -16,6 +16,8 @@ import { freshness, isStale, nextDue, tasksUnder } from '@/modules/chores/logic'
 import { listAreas, locationLabel } from '@/modules/locations/logic';
 import { EffortIcon, useCopy } from '@/theme';
 import { Tip } from '../help/Tip';
+import { PlaceStuff } from '../stuff/PlaceStuff';
+import { useHousehold } from '@/modules/households/context';
 
 function FreshnessBar({ ratio, label }: { ratio: number; label: string }) {
   const t = useCopy();
@@ -84,6 +86,7 @@ export function AreasPage() {
 
 export function AreaDetailPage() {
   const t = useCopy();
+  const { settings } = useHousehold();
   const { id = '' } = useParams();
   const { tasks, completions, locations, ancestry, ctx, today, isLoading } = useChores();
   if (isLoading) return <Splash />;
@@ -95,7 +98,7 @@ export function AreaDetailPage() {
   const f = freshness(here, completions, today, ctx);
 
   return (
-    <div>
+    <div className="pb-8">
       <PageHeader title={area.name} back="/areas" />
       <Panel>
         <FreshnessBar ratio={f.ratio} label={t('areas.freshness')} />
@@ -140,6 +143,7 @@ export function AreaDetailPage() {
           })}
         </ul>
       )}
+      {settings.modules.stuff && <PlaceStuff locationId={area.id} />}
     </div>
   );
 }

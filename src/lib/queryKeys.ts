@@ -21,4 +21,9 @@ export const qk = {
   listItems: (hid: string) => ['listItems', hid] as const,
   staples: (hid: string) => ['staples', hid] as const,
   grocerySuggestions: (hid: string) => ['grocerySuggestions', hid] as const,
+  // Stuff
+  items: (hid: string) => ['items', hid] as const,
+  documents: (hid: string) => ['documents', hid] as const,
+  shortCodes: (hid: string) => ['shortCodes', hid] as const,
+  signedUrls: (paths: readonly string[]) => ['signedUrls', ...paths] as const,
 };

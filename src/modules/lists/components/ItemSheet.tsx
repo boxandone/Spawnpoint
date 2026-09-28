@@ -24,6 +24,8 @@ interface ItemSheetProps {
   /** Groceries only. */
   isStaple?: boolean;
   onMakeStaple?: () => void;
+  /** To buy, once bought: open or create the matching Stuff item. */
+  onAddToStuff?: () => void;
 }
 
 /** Edit one item. The fields shown depend on the kind of list. */
@@ -36,6 +38,7 @@ export function ItemSheet({
   onMove,
   isStaple,
   onMakeStaple,
+  onAddToStuff,
 }: ItemSheetProps) {
   const t = useCopy();
   const { members } = useHousehold();
@@ -193,8 +196,10 @@ export function ItemSheet({
               rows={3}
               inputMode="url"
             />
-            {status === 'bought' && (
-              <p className="text-sm text-ink-muted">{t('toBuy.stuffSoon')}</p>
+            {status === 'bought' && onAddToStuff && (
+              <Button variant="secondary" icon="stuff" onClick={onAddToStuff}>
+                {item.item_id ? t('toBuy.openInStuff') : t('toBuy.addToStuff')}
+              </Button>
             )}
           </>
         )}
