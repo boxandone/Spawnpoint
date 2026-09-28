@@ -19,7 +19,7 @@ export type Database = {
         Relationships: [];
       };
       xp_events: {
-        Row: { id: string; household_id: string; member_id: string; source_kind: string; completion_id: string | null; deed_log_id: string | null; shopping_trip_id: string | null; item_id: string | null; document_id: string | null; day: string; raw_xp: number; credited_xp: number; capped: boolean; created_at: string };
+        Row: { id: string; household_id: string; member_id: string; source_kind: string; completion_id: string | null; deed_log_id: string | null; shopping_trip_id: string | null; item_id: string | null; document_id: string | null; plan_milestone_id: string | null; discussion_id: string | null; day: string; raw_xp: number; credited_xp: number; capped: boolean; created_at: string };
         Insert: { [key: string]: never };
         Update: { [key: string]: never };
         Relationships: [];
@@ -271,6 +271,7 @@ export type Database = {
           id: string;
           household_id: string;
           item_id: string | null;
+          plan_id: string | null;
           kind: string;
           title: string | null;
           storage_path: string;
@@ -286,6 +287,7 @@ export type Database = {
           id?: string;
           household_id: string;
           item_id?: string | null;
+          plan_id?: string | null;
           kind: string;
           title?: string | null;
           storage_path: string;
@@ -308,6 +310,117 @@ export type Database = {
           created_at: string;
           updated_at: string;
           created_by: string | null;
+        };
+        Insert: { [key: string]: never };
+        Update: { [key: string]: never };
+        Relationships: [];
+      };
+      plans: {
+        Row: {
+          id: string;
+          household_id: string;
+          title: string;
+          type: string;
+          status: string;
+          starts_on: string | null;
+          ends_on: string | null;
+          tentative: boolean;
+          icon: string | null;
+          color: string | null;
+          notes: string | null;
+          links: string[];
+          budget: number | null;
+          discuss: boolean;
+          archived_at: string | null;
+          created_at: string;
+          updated_at: string;
+          created_by: string | null;
+        };
+        Insert: {
+          id?: string;
+          household_id: string;
+          title: string;
+          type?: string;
+          status?: string;
+          starts_on?: string | null;
+          ends_on?: string | null;
+          tentative?: boolean;
+          icon?: string | null;
+          color?: string | null;
+          notes?: string | null;
+          links?: string[];
+          budget?: number | null;
+          discuss?: boolean;
+          archived_at?: string | null;
+        };
+        Update: {
+          title?: string;
+          type?: string;
+          status?: string;
+          starts_on?: string | null;
+          ends_on?: string | null;
+          tentative?: boolean;
+          icon?: string | null;
+          color?: string | null;
+          notes?: string | null;
+          links?: string[];
+          budget?: number | null;
+          discuss?: boolean;
+          archived_at?: string | null;
+        };
+        Relationships: [];
+      };
+      plan_checklist_items: {
+        Row: {
+          id: string;
+          household_id: string;
+          plan_id: string;
+          text: string;
+          done: boolean;
+          position: number;
+          created_at: string;
+          updated_at: string;
+          created_by: string | null;
+        };
+        Insert: {
+          id?: string;
+          household_id: string;
+          plan_id: string;
+          text: string;
+          done?: boolean;
+          position?: number;
+        };
+        Update: {
+          text?: string;
+          done?: boolean;
+          position?: number;
+        };
+        Relationships: [];
+      };
+      discussions: {
+        Row: {
+          id: string;
+          household_id: string;
+          plan_id: string | null;
+          list_item_id: string | null;
+          title: string;
+          note: string | null;
+          resolved_by: string;
+          created_at: string;
+          updated_at: string;
+          created_by: string | null;
+        };
+        Insert: { [key: string]: never };
+        Update: { [key: string]: never };
+        Relationships: [];
+      };
+      ics_tokens: {
+        Row: {
+          id: string;
+          member_id: string;
+          chores: string;
+          last_used_at: string | null;
+          created_at: string;
         };
         Insert: { [key: string]: never };
         Update: { [key: string]: never };
@@ -742,6 +855,15 @@ export type Database = {
       undo_redemption: { Args: { p_id: string }; Returns: undefined };
       done_shopping: { Args: { p_list_id: string }; Returns: Json };
       finalize_document: { Args: { p_id: string }; Returns: Json };
+      resolve_discussion: {
+        Args: { p_plan_id?: string | null; p_list_item_id?: string | null; p_note?: string | null };
+        Returns: string;
+      };
+      undo_discussion: { Args: { p_id: string }; Returns: undefined };
+      create_ics_token: { Args: Record<PropertyKey, never>; Returns: string };
+      revoke_ics_token: { Args: Record<PropertyKey, never>; Returns: undefined };
+      set_ics_chores: { Args: { p_mode: string }; Returns: undefined };
+      ics_feed: { Args: { p_token: string }; Returns: Json };
       record_labels_printed: { Args: { p_count: number }; Returns: undefined };
       undo_done_shopping: { Args: { p_trip_id: string }; Returns: undefined };
       grocery_suggestions: {
